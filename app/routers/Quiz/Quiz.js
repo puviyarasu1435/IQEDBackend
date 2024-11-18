@@ -249,10 +249,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const uploadsPath = path.join(__dirname, "uploads");
+const uploadsPath = '/tmp/uploads';
 
 if (!fs.existsSync(uploadsPath)) {
-  fs.mkdirSync(uploadsPath);
+    fs.mkdirSync(uploadsPath, { recursive: true });
 }
 
 // Multer storage configuration
