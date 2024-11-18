@@ -8,8 +8,8 @@ const multer = require("multer");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
-const { jsPDF } = require("jspdf");
-const createDynamicHTML = require("./template.js");
+
+
 
 // router.post("/Upload",Token_JWT_Verify,(req,res)=>{
 
