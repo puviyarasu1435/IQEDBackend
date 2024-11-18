@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const TwilioClient = require('twilio')("AC957eac94548a4d8183143af4b04fda5f", "be9d6d7a0ccf81f0615c01adec5a59b9");
+const TwilioClient = require('twilio')("dddd", "dddd");
 
 
 const EmailOTP = {};
