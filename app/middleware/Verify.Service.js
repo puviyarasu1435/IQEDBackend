@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const TwilioClient = require('twilio')("dddd", "dddd");
+// const TwilioClient = require('twilio')("dddd", "dddd");
 
 
 const EmailOTP = {};
@@ -24,25 +24,27 @@ function Generate_OTP(Email) {
 
 
 async function Send_Mobile_OTP(MobileNumber) {
-  const verification = await TwilioClient.verify.v2
-    .services(process.env.Mobile_User)
-    .verifications.create({
-      channel: "sms",
-      to: MobileNumber,
-    });
-  return(verification.status);
+  // const verification = await TwilioClient.verify.v2
+  //   .services(process.env.Mobile_User)
+  //   .verifications.create({
+  //     channel: "sms",
+  //     to: MobileNumber,
+  //   });
+  // return(verification.status);
+  return(true);
 }
 
 
 async function Verify_Mobile_OTP(MobileNumber,OTP) {
-  const verificationCheck = await TwilioClient.verify.v2
-    .services(process.env.Mobile_User)
-    .verificationChecks.create({
-      code: OTP,
-      to: MobileNumber,
-    });
+  // const verificationCheck = await TwilioClient.verify.v2
+  //   .services(process.env.Mobile_User)
+  //   .verificationChecks.create({
+  //     code: OTP,
+  //     to: MobileNumber,
+  //   });
 
-  return(verificationCheck.status);
+  // return(verificationCheck.status);
+   return(true);
 }
 
 
