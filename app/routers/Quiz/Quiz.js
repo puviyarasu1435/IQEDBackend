@@ -244,8 +244,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: process.env.Email_User,
-    pass: process.env.Email_Password,
+    user:"puviyarasu.p2001@gmail.com",
+    pass: "hhqo znej odxf rjue",
   },
 });
 
@@ -273,7 +273,7 @@ const upload = multer({ storage });
 async function Send_Email_PDF(toEmail, file) {
   try {
     const mailOptions = {
-      from: process.env.Email_User, // Sender's email
+      from: "puviyarasu.p2001@gmail.com", // Sender's email
       to: toEmail, // Recipient's email
       subject: "IQED | IQ TEST RESULT",
       html: `<h1>IQED | Overcome Math Anxiety and Boost Your Memory  </h1> <a href="http://localhost:5173/Auth"> Go Now </a> `,
