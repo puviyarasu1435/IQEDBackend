@@ -288,7 +288,7 @@ async function Send_Email_PDF(toEmail, file, name, score) {
       from: process.env.Email_User, // Sender's email
       to: toEmail, // Recipient's email
       subject: "IQED | IQ TEST RESULT",
-      html:score>55? htmltemplate({ name, score }) : htmltemplteno({name, score }),
+      html:score>55? htmltemplte({ name, score }) : htmltemplteno({name, score }),
       attachments:score>55 ? att:[] ,
     };
 
