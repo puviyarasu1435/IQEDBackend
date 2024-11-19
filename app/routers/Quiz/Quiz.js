@@ -278,13 +278,13 @@ async function Send_Email_PDF(toEmail, file, name, score) {
       from: process.env.Email_User, // Sender's email
       to: toEmail, // Recipient's email
       subject: "IQED | IQ TEST RESULT",
-      html: score<55?`<h3>score is very low(<50) try again`</h3> <div style="margin-top: 20px; text-align: center;">
-            <a href="https://www.iqed.in/" target="_blank" 
-               style="text-decoration: none; background-color: #007bff; color: white; padding: 10px 20px; 
-               border-radius: 5px; font-size: 18px; display: inline-block;">
-                Join Us
-            </a>
-        </div>: htmltemplte({ name, score }),
+      html: score < 55
+          ? `<h3>Your score is very low (< 55). Try again!</h3>
+             <a href="https://www.iqed.in/" target="_blank" 
+               style="text-decoration: none; background-color: #007bff; color: white; padding: 10px 20px;">
+               Join Us
+             </a>`
+          : htmltemplate({ name, score }),
       attachments: [
         {
           filename: "red-dot.png", // Inline image
