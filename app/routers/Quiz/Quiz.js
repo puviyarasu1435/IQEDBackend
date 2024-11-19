@@ -290,7 +290,7 @@ async function Send_Email_PDF(toEmail, file, name, score) {
     };
 
     await transporter.sendMail(mailOptions);
-    console.log("Email sent successfully to:", toEmail);
+    console.log("Email sent successfully to:",toEmail,  name, score);
     return true;
   } catch (error) {
     console.error("Error sending email:", error);
