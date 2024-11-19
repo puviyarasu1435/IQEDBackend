@@ -8,8 +8,8 @@ const multer = require("multer");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
-
-
+const htmltemplte = require("./template.js");
+const IQScoreModel = require("../../models/IQScoreModel.js");
 
 // router.post("/Upload",Token_JWT_Verify,(req,res)=>{
 
@@ -78,7 +78,9 @@ router.post("/questionslist", async (req, res) => {
 
     // Check if the request body contains an array
     if (!Array.isArray(questions) || questions.length === 0) {
-      return res.status(400).json({ message: "Please provide an array of questions." });
+      return res
+        .status(400)
+        .json({ message: "Please provide an array of questions." });
     }
 
     // Use `insertMany` to save multiple questions at once
@@ -95,9 +97,6 @@ router.post("/questionslist", async (req, res) => {
   }
 });
 
-
-
-
 router.post("/create-session", async (req, res) => {
   try {
     const totalQuestions = 35; // Total number of questions required
@@ -109,10 +108,10 @@ router.post("/create-session", async (req, res) => {
 
     // Category distribution and counts
     const categoryDistribution = {
-      "Logical Reasoning": 9,          // 9 questions (40%)
-      "Verbal Comprehension": 9,       // 9 questions (30%)
-      "Working Memory": 8,             // 8 questions (20%)
-      "Spatial Reasoning": 9           // 9 questions (10%)
+      "Logical Reasoning": 9, // 9 questions (40%)
+      "Verbal Comprehension": 9, // 9 questions (30%)
+      "Working Memory": 8, // 8 questions (20%)
+      "Spatial Reasoning": 9, // 9 questions (10%)
     };
 
     const quizQuestions = [];
@@ -122,13 +121,15 @@ router.post("/create-session", async (req, res) => {
       const category = await CategoryModel.findOne({ name: categoryName });
 
       if (!category) {
-        return res.status(404).json({ error: `Category ${categoryName} not found` });
+        return res
+          .status(404)
+          .json({ error: `Category ${categoryName} not found` });
       }
 
       // Step 2: Retrieve `count` random questions for the category
       const questions = await QuizModel.aggregate([
         { $match: { categories: category._id } }, // Match questions for the category
-        { $sample: { size: count } },            // Randomly select `count` questions
+        { $sample: { size: count } }, // Randomly select `count` questions
       ]);
 
       if (questions.length < count) {
@@ -146,7 +147,7 @@ router.post("/create-session", async (req, res) => {
       questionsList: quizQuestions.map((question) => question._id), // Store only question IDs
       questionCount: totalQuestions,
       createTime: new Date(),
-      categories:'673a02297b8eb1366e5daa43'
+      categories: "673a02297b8eb1366e5daa43",
     });
 
     // Save the session in the database
@@ -167,7 +168,6 @@ router.post("/create-session", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 router.get("/quiz-session/:id", async (req, res) => {
   try {
@@ -197,7 +197,19 @@ router.get("/quiz-session/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
+const calculateIQ = (userScore,scoreslist) => {     
+  // Predefined scores array (you could replace this with a dynamic set of scores)
+      
+   // Add the user score to the predefined scores arrayconst 
+   const  updatedScores = [...scoreslist, userScore];     
+   // Calculate the mean and standard deviationconst 
+   const  mean = updatedScores.reduce((sum, score) => sum + score, 0) / updatedScores.length;     
+   const standardDeviation = Math.sqrt(       updatedScores.reduce((sum, score) => sum + Math.pow(score - mean, 2), 0) / (updatedScores.length - 1)     );     
+   // Calculate Z-score and then IQ (IQ = Z-score * 15 + 100)
+   const zScore = (userScore - mean) / standardDeviation;     
+   const calculatedIQ = (zScore * 15) + 100; 
+   return calculatedIQ.toFixed(2); 
+   };
 // Update quiz session by session ID and host ID
 router.put("/quiz-session/:id", async (req, res) => {
   try {
@@ -216,7 +228,15 @@ router.put("/quiz-session/:id", async (req, res) => {
       },
       { new: true } // Return the updated document
     );
+    let iqScores = await IQScoreModel.findOne();
+    if (!iqScores) {
+      iqScores = new IQScoreModel({ Scores: [] });
+    }
 
+    // Add the score to the Scores array
+    iqScores.Scores.push(calculateIQ(score,iqScores.Scores));
+    await iqScores.save();
+    // Clean up the file
     // If the session is not found, send a 404 error
     if (!quizSession) {
       return res
@@ -244,57 +264,30 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user:"puviyarasu.p2001@gmail.com",
-    pass: "hhqo znej odxf rjue",
+    user: process.env.Email_User,
+    pass: process.env.Email_Password,
   },
 });
 
-const uploadsPath = '/tmp/uploads';
-
-if (!fs.existsSync(uploadsPath)) {
-    fs.mkdirSync(uploadsPath, { recursive: true });
-}
-
-// Multer storage configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsPath); // Specify upload folder
-  },
-  filename: (req, file, cb) => {
-    const timestamp = Date.now();
-    const originalName = file.originalname || "uploaded-file";
-    const validName = originalName.replace(/[^a-z0-9.]/gi, "_").toLowerCase();
-    cb(null, `${timestamp}-${validName}`);
-  },
-});
-
-const upload = multer({ storage });
-
-async function Send_Email_PDF(toEmail, file) {
+async function Send_Email_PDF(toEmail, file, name, score) {
+  const imagedata = file.replace(/^data:image\/png;base64,/, "");
   try {
     const mailOptions = {
-      from: "puviyarasu.p2001@gmail.com", // Sender's email
+      from: process.env.Email_User, // Sender's email
       to: toEmail, // Recipient's email
       subject: "IQED | IQ TEST RESULT",
-      html: `<h1>IQED | Overcome Math Anxiety and Boost Your Memory  </h1> <a href="http://localhost:5173/Auth"> Go Now </a> `,
+      html: htmltemplte({ name, score }),
       attachments: [
         {
-          filename: "IQTestResult.pdf",
-          path: file.path,
-          contentType: "application/pdf",
+          filename: "red-dot.png", // Inline image
+          content: Buffer.from(imagedata, "base64"),
+          contentType: "image/png",
+          cid: "chartimage", // Content ID for referencing in the email
         },
       ],
     };
 
-    transporter.sendMail(mailOptions).then(()=>{
-      fs.unlink(file.path, (err) => {
-        if (err) {
-          console.error("Error removing file:", err);
-        } else {
-          console.log("File removed successfully:", file.path);
-        }
-      });
-    });
+    await transporter.sendMail(mailOptions);
     console.log("Email sent successfully to:", toEmail);
     return true;
   } catch (error) {
@@ -303,22 +296,13 @@ async function Send_Email_PDF(toEmail, file) {
   }
 }
 
-router.post("/upload", upload.single("file"), async (req, res) => {
+router.post("/upload", async (req, res) => {
   try {
-    const file = req.file;
-    const { email } = req.body;
+    // const file = req.file;
+    const { file, email, name, score } = req.body;
+    console.log(file, email, name, score);
 
-    if (!file) {
-      return res.status(400).send("No file uploaded.");
-    }
-    if (!email) {
-      console.error("Email address is missing!");
-      return res.status(400).send("Email address is required.");
-    }
-
-    const emailSent = await Send_Email_PDF(email, file);
-
-    // Clean up the file
+    const emailSent = await Send_Email_PDF(email, file, name, score);
 
 
     if (emailSent) {
