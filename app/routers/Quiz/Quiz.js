@@ -232,9 +232,9 @@ router.put("/quiz-session/:id", async (req, res) => {
     if (!iqScores) {
       iqScores = new IQScoreModel({ Scores: [] });
     }
-
+    const iqscoreraw = calculateIQ(score,iqScores.Scores)
     // Add the score to the Scores array
-    iqScores.Scores.push(calculateIQ(score,iqScores.Scores));
+    iqScores.Scores.push(iqscoreraw);
     await iqScores.save();
     // Clean up the file
     // If the session is not found, send a 404 error
@@ -252,12 +252,14 @@ router.put("/quiz-session/:id", async (req, res) => {
       questions: quizSession.questionsList,
       answeredQuestions: quizSession.answeredQuestions,
       score: quizSession.score,
+      iqscoreraw:iqscoreraw
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
+
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
