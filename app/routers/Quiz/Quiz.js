@@ -8,7 +8,7 @@ const multer = require("multer");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
-const htmltemplte = require("./template.js");
+const {htmltemplte,htmltemplteno} = require("./template.js");
 const IQScoreModel = require("../../models/IQScoreModel.js");
 
 // router.post("/Upload",Token_JWT_Verify,(req,res)=>{
@@ -274,19 +274,20 @@ const transporter = nodemailer.createTransport({
 async function Send_Email_PDF(toEmail, file, name, score) {
   const imagedata = file.replace(/^data:image\/png;base64,/, "");
   try {
-    const mailOptions = {
-      from: process.env.Email_User, // Sender's email
-      to: toEmail, // Recipient's email
-      subject: "IQED | IQ TEST RESULT",
-      html: htmltemplate({ name, score }),
-      attachments: [
+    const att = [
         {
           filename: "red-dot.png", // Inline image
           content: Buffer.from(imagedata, "base64"),
           contentType: "image/png",
           cid: "chartimage", // Content ID for referencing in the email
         },
-      ],
+      ]
+    const mailOptions = {
+      from: process.env.Email_User, // Sender's email
+      to: toEmail, // Recipient's email
+      subject: "IQED | IQ TEST RESULT",
+      html:score>55? htmltemplate({ name, score }) : htmltemplteno({name, score }),
+      attachments:score>55 ? att:[] ,
     };
 
     await transporter.sendMail(mailOptions);
