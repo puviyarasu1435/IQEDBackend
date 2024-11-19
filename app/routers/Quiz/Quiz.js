@@ -301,8 +301,8 @@ router.post("/upload", async (req, res) => {
     // const file = req.file;
     const { file, email, name, score } = req.body;
     console.log(file, email, name, score);
-
-    const emailSent = await Send_Email_PDF(email, file, name, score);
+    let iqScores = await IQScoreModel.findOne();
+    const emailSent = await Send_Email_PDF(email, file, name, calculateIQ(score,iqScores.Scores));
 
 
     if (emailSent) {
