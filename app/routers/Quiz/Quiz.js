@@ -234,7 +234,7 @@ router.put("/quiz-session/:id", async (req, res) => {
     }
     const iqscoreraw = calculateIQ(score,iqScores.Scores)
     // Add the score to the Scores array
-    iqScores.Scores.push(iqscoreraw);
+    iqScores.Scores.push(score);
     await iqScores.save();
     // Clean up the file
     // If the session is not found, send a 404 error
