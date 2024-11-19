@@ -278,7 +278,7 @@ async function Send_Email_PDF(toEmail, file, name, score) {
       from: process.env.Email_User, // Sender's email
       to: toEmail, // Recipient's email
       subject: "IQED | IQ TEST RESULT",
-      html: htmltemplte({ name, score }),
+      html: score<55? htmltemplte({ name, score }):`score is very low(<50) try again`,
       attachments: [
         {
           filename: "red-dot.png", // Inline image
@@ -303,8 +303,7 @@ router.post("/upload", async (req, res) => {
     // const file = req.file;
     const { file, email, name, score } = req.body;
     console.log(file, email, name, score);
-    let iqScores = await IQScoreModel.findOne();
-    const emailSent = await Send_Email_PDF(email, file, name, calculateIQ(score,iqScores.Scores));
+    const emailSent = await Send_Email_PDF(email, file, name, score);
 
 
     if (emailSent) {
