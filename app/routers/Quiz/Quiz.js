@@ -252,7 +252,7 @@ router.put("/quiz-session/:id", async (req, res) => {
       questions: quizSession.questionsList,
       answeredQuestions: quizSession.answeredQuestions,
       score: quizSession.score,
-      iqscoreraw:iqscoreraw
+      fulliqscore:iqscoreraw
     });
   } catch (error) {
     console.error(error);
