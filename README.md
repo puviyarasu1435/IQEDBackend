@@ -1,1 +1,0 @@
-# IQED_IQ_Test_Platform

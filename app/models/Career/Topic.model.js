@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
-const QuizModel = require("./QuizModel");
 const Schema = mongoose.Schema;
 
-const CategorySchema = new Schema({
+const TopicSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -10,8 +9,8 @@ const CategorySchema = new Schema({
   },
   description: {
     type: String,
-  }
+  },
 });
 
-const CategoryModel = mongoose.model('Category', CategorySchema);
-module.exports = CategoryModel;
+const TopicModel = mongoose.model("Topics", TopicSchema);
+module.exports = TopicModel;

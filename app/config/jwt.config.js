@@ -1,34 +1,24 @@
-const JWT = require("jsonwebtoken")
-const { createHash } = require('crypto');
+const JWT = require("jsonwebtoken");
 
-// covert The Data into SHA256 Encode
-function CovertToHash(Data){
-    return createHash('sha256').update(Data).digest('base64');
+function jwt_isVerify(req, res, next) {
+  const UserToken = req.session.Token;
+  if(UserToken!=undefined){
+    JWT.verify(UserToken, process.env.JWT_Token, (err, Data) => {
+        if (err) return res.status(403).json({ message: "UnAuthorized" });
+        req._id = Data._id;
+        next();
+      });
+  }else{
+    res.status(403).json({ message: "UnAuthorized" });
+  }
+
 }
 
+function jwt_GetToken(Data, ExpireTime = "1h") {
+  const AccessToken = JWT.sign(Data, process.env.JWT_Token, {
+    expiresIn: ExpireTime,
+  });
+  return AccessToken;
+}
 
-// Jwt Auth verify function used to verify the token 
-function Token_JWT_Verify(req,res,next){
-    const AuthHeader = req.headers['authorization']
-    const UserToken = AuthHeader && AuthHeader.split(' ')[1]
-    if(UserToken == null){return res.sendStatus(401)}
-    JWT.verify(UserToken,process.env.Access_Token,(err,Data)=>{
-        if(err) return res.sendStatus(403)
-        req._id = Data._id
-        next()
-    })
- } 
-
-
- // Jwt to Creater the Auth Token 
-function Genrate_JWT_Token(Data,ExpireTime="1h"){
-    const AccessToken = JWT.sign(Data,process.env.Access_Token,{expiresIn:ExpireTime})
-    return({
-        AccessToken:AccessToken
-    })
- } 
-
-
-
-
-module.exports = {CovertToHash,Genrate_JWT_Token,Token_JWT_Verify}
+module.exports = { jwt_GetToken, jwt_isVerify };
