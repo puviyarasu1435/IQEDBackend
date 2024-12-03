@@ -24,6 +24,7 @@ const AuthRoute = require("./app/routes/Auth.routes");
 const UserRoute = require("./app/routes/User.routes");
 const QuizRoute = require("./app/routes/Quiz.routes");
 const CareerRoute = require("./app/routes/Career.routes");
+const GameRoute = require("./app/routes/Game.routes");
 const { main } = require("./app/Stream/User.Stream");
 
 // Middleware
@@ -48,6 +49,7 @@ app.use("/auth", AuthRoute);
 app.use("/career", CareerRoute);
 app.use("/user", jwt_isVerify, CheckEarnings, UserRoute);
 app.use("/quiz", jwt_isVerify, CheckEarnings, QuizRoute);
+app.use("/game", GameRoute);
 
 //sockets
 SocketConnection(server)
