@@ -51,7 +51,7 @@ const SocketConnection = (server) => {
           { $match: { topics:topic._id } }, // Match topic ID
           { $sample: { size: 3 } }, // Randomly sample questions
         ]);
-        console.log(questionsList);
+        
         if (questionsList.length > 0) {
           const session = new GameSessionModel({
             host: UserId,

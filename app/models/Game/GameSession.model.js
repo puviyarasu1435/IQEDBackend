@@ -13,6 +13,10 @@ const GameSessionSchema = new Schema(
       enum: ["pending", "completed"],
       default: "pending",
     },
+    RoomId:{
+      type: String,
+      required: true,
+    },
     Players: [
       {
         SocketId: {

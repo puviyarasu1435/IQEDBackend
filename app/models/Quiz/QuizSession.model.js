@@ -8,10 +8,6 @@ const QuizSessionSchema = new Schema(
       ref: "User",
       required: true,
     },
-    RoomId:{
-      type: String,
-      required: true,
-    },
     status: {
       type: String,
       enum: ["pending", "completed"],
