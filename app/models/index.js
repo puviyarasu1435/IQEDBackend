@@ -5,18 +5,17 @@ const QuestionModel = require("./Career/Question.model");
 const QuizSessionModel = require("./Quiz/QuizSession.model");
 const GameSessionModel = require("./Game/GameSession.model");
 const SectionModel = require("./Career/Section.model");
+const IQQuestionModel = require("./IQ/IQQuestion.model");
+const IQSessionModel = require("./IQ/IQSession.model");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-module.exports ={UserModel,LessonModel,TopicModel,QuestionModel,QuizSessionModel,GameSessionModel,SectionModel}
+module.exports = {
+  UserModel,
+  LessonModel,
+  TopicModel,
+  QuestionModel,
+  QuizSessionModel,
+  GameSessionModel,
+  SectionModel,
+  IQQuestionModel,
+  IQSessionModel,
+};

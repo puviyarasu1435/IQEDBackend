@@ -43,6 +43,17 @@ const SocketConnection = (server) => {
       }
     });
 
+    socket.on("game-ended", async ({ roomId ,GameSessionId}) => {
+      if (rooms[roomId]) {
+        const session = await GameSessionModel.findById(GameSessionId).populate(
+          "questionsList"
+        );
+        console.log(`Session ${session}`);
+        io.to(roomId).emit("game-ended", {roomId:roomId,GameSession: session });
+      } 
+    });
+
+
     socket.on("start-game", async ({ roomId, UserId, TopicId="674be07aacefccaba22b165f" }, callback) => {
       if (rooms[roomId]) {
         rooms[roomId].gameStarted = true;

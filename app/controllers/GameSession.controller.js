@@ -91,7 +91,7 @@ async function updateGameSessionAnswers(req, res) {
     res.status(200).json({
       Players: session.Players,
       SocketId: player.SocketId,
-      status: player.status,
+      status: session.status,
       questionsList: player.questionsList,
       Topics: session.Topic,
       questionCount: session.questionCount,
