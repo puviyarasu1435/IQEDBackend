@@ -20,7 +20,7 @@ const IQSessionSchema = new Schema(
     questionsList: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Question",
+        ref: "IQQuestion",
         required: true,
       },
     ],
@@ -28,7 +28,7 @@ const IQSessionSchema = new Schema(
       {
         questionId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Question",
+          ref: "IQQuestion",
           required: true,
         },
         answer: {

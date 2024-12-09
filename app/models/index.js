@@ -7,6 +7,7 @@ const GameSessionModel = require("./Game/GameSession.model");
 const SectionModel = require("./Career/Section.model");
 const IQQuestionModel = require("./IQ/IQQuestion.model");
 const IQSessionModel = require("./IQ/IQSession.model");
+const IQModel = require("./IQ/IQData.model");
 
 module.exports = {
   UserModel,
@@ -18,4 +19,5 @@ module.exports = {
   SectionModel,
   IQQuestionModel,
   IQSessionModel,
+  IQModel
 };
