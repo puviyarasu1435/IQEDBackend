@@ -13,6 +13,7 @@ router.post("/SendEmail",SendMail)
 router.get("/question:id", getQuestions);
 router.get("/question", deleteQuestions);
 // router.post("/question", postQuestions);
+
 router.post("/question", postBulkQuestions);    
 router.put("/question:id", putQuestions);
 router.delete("/question:id", deleteQuestions);
