@@ -12,7 +12,7 @@ const sessionMiddleware = session({
   credentials: true, // Allow credentials to be used
   cookie: {
     httpOnly: false, // Prevents JS access to cookies
-    secure: process.env.NODE_ENV === "production", // Set `true` if HTTPS is used
+    secure: true, // Set `true` if HTTPS is used
     maxAge: TTL, // 1 hour in milliseconds
   },
   store: MongoStore.create({
