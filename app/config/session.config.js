@@ -1,8 +1,7 @@
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
-const TTL = 30 * (60 *1000); 
-
+const TTL = 30 * (60 *1000);
 
 // Express session middleware configuration
 const sessionMiddleware = session({
@@ -12,7 +11,7 @@ const sessionMiddleware = session({
   credentials: true, // Allow credentials to be used
   cookie: {
     httpOnly: false, // Prevents JS access to cookies
-    secure: true, // Set `true` if HTTPS is used
+    secure: false, // Set `true` if HTTPS is used
     maxAge: TTL, // 1 hour in milliseconds
   },
   store: MongoStore.create({
