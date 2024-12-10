@@ -10,9 +10,10 @@
         "src":"/(.*)",
         "dest":"/",
             "methods":["GET","POST","PUT"],
-            "headers":{
-                "Access-Control-Allow-Origin":"*"
-            }
+            "headers": {
+            "Access-Control-Allow-Origin": "https://iqed-iq.vercel.app",
+            "Access-Control-Allow-Credentials": "true"
+        }
     }]
 
 }
