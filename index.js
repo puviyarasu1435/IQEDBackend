@@ -33,10 +33,9 @@ const { main } = require("./app/Stream/User.Stream");
 // Middleware
 app.use(
   cors({
-    origin: "https://gowthamrajvp.github.io/IQED/", // Allow this specific origin
-    methods: ["GET", "POST", "PUT", "OPTIONS"], // Add OPTIONS method
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
-    credentials: true, // Allow cookies if needed
+    // origin: "http://localhost:5173", 
+    // methods: ["GET", "POST","PUT"],
+    credentials: true, 
   })
 );
 app.use(express.json({limit: '50mb'}));
