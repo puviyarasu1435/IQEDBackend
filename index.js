@@ -30,12 +30,24 @@ const GameRoute = require("./app/routes/Game.routes");
 
 const { main } = require("./app/Stream/User.Stream");
 
-app.use(cors({
-  origin: '*', 
-  methods: 'GET,POST,OPTIONS',
-  allowedHeaders: 'Content-Type,Authorization'
-}));
+// app.use(cors({
+//   origin: 'https://iqed-iq.vercel.app', // Replace with your frontend's URL
+//   methods: 'GET,POST,OPTIONS',
+//   allowedHeaders: 'Content-Type,Authorization'
+// }));
 
+
+
+const corsOptions = {
+  origin: '*',  
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
+  allowedHeaders: 'Content-Type,Authorization', 
+  exposedHeaders: 'Content-Length,Content-Type', 
+  credentials: false,  
+  preflightContinue: false,  
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json({limit: '50mb'}));
 app.use(sessionMiddleware);
