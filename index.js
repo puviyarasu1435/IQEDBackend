@@ -33,7 +33,7 @@ const { main } = require("./app/Stream/User.Stream");
 // Middleware
 app.use(
   cors({
-    origin: "https://gowthamrajvp.github.io", // Allow this specific origin
+    origin: "https://gowthamrajvp.github.io/IQED/", // Allow this specific origin
     methods: ["GET", "POST", "PUT", "OPTIONS"], // Add OPTIONS method
     allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
     credentials: true, // Allow cookies if needed
