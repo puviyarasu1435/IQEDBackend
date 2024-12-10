@@ -11,13 +11,13 @@ const {htmltemplte,htmltemplteno} = require("../models/IQ/template");
 
 async function createIQSession(req, res) {
   try {
-    const { questionCount = 4 } = req.body;
+    const { questionCount } = req.body;
 
     const TopicDistribution = {
-      "Logical Reasoning": 4,
-      "Verbal Comprehension": 0,
-      "Working Memory": 0,
-      "Spatial Reasoning": 0,
+      "Logical Reasoning": 9,
+      "Verbal Comprehension": 9,
+      "Working Memory": 8,
+      "Spatial Reasoning": 9,
     };
 
     const quizQuestions = [];
