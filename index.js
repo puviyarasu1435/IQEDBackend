@@ -33,7 +33,7 @@ const { main } = require("./app/Stream/User.Stream");
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173", // React frontend
+    origin: "https://gowthamrajvp.github.io/", // React frontend
     methods: ["GET", "POST","PUT"],
     credentials: true, // Allow sending cookies
   })
