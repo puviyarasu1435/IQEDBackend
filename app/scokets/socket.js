@@ -5,7 +5,7 @@ const rooms = {};
 const SocketConnection = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: "https://gowthamrajvp.github.io",
+      origin: "https://gowthamrajvp.github.io/IQED/",
       methods: ["GET", "POST"],
       credentials: true,
     },
