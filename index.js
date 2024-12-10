@@ -34,7 +34,7 @@ const { main } = require("./app/Stream/User.Stream");
 app.use(
   cors(
     {
-    origin: "https://gowthamrajvp.github.io", 
+    origin: "https://iqed-iq.vercel.app/", 
     methods: ["GET", "POST","PUT"],
     credentials: true, 
   }
