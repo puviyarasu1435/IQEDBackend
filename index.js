@@ -31,7 +31,7 @@ const GameRoute = require("./app/routes/Game.routes");
 const { main } = require("./app/Stream/User.Stream");
 
 app.use(cors({
-  origin: 'https://iqed-iq.vercel.app', // Replace with your frontend's URL
+  origin: '*', 
   methods: 'GET,POST,OPTIONS',
   allowedHeaders: 'Content-Type,Authorization'
 }));
