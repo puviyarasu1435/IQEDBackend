@@ -10,9 +10,9 @@ const sessionMiddleware = session({
   saveUninitialized: false,
   credentials: true, // Allow credentials to be used
   cookie: {
-    httpOnly: false, // Prevents JS access to cookies // Set `true` if HTTPS is used
+    httpOnly: null, // Prevents JS access to cookies // Set `true` if HTTPS is used
     maxAge: TTL,
-    secure: false,
+    secure: true,
     sameSite: 'lax',
    // 1 hour in milliseconds
   },
