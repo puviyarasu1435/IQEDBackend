@@ -13,6 +13,7 @@ const sessionMiddleware = session({
     httpOnly: true, // Prevents JS access to cookies // Set `true` if HTTPS is used
     maxAge: TTL,
     secure: false,
+    sameSite: 'none',
    // 1 hour in milliseconds
   },
   store: MongoStore.create({
