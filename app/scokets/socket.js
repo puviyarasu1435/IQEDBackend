@@ -5,7 +5,7 @@ const rooms = {};
 const SocketConnection = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: "https://iqed-iq.vercel.app/",
+      origin: "*",
       methods: ["GET", "POST"],
       credentials: true,
     },
