@@ -7,7 +7,7 @@ router.get("/", (req, res) => {
 });
 router.get("/test", (req, res) => {
   req.session.User = jwt_GetToken({test:"ffff"});
-  res.sendStatus(200);
+  res.send(req.session.User);
 });
 
 module.exports = router;
