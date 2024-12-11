@@ -37,16 +37,20 @@ const { main } = require("./app/Stream/User.Stream");
 // }));
 
 
-const corsOptions = {
-  origin: ["https://iqed-iq.vercel.app", "http://localhost:3000"], // Allow specific frontend URLs
-  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"], // Allowed HTTP methods
-  allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-  credentials: true, // Allow cookies and credentials
-  optionsSuccessStatus: 204, // Ensures compatibility for older browsers
-};
+// const corsOptions = {
+//   origin: ["https://iqed-iq.vercel.app", "http://localhost:3000"], // Allow specific frontend URLs
+//   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+//   allowedHeaders: ["Content-Type", "Authorization"],
+//   credentials: true, // Allow cookies or credentials
+//   preflightContinue: false,
+// };
 
-app.use(cors(corsOptions));
-// app.use(cors());
+// app.use(cors(corsOptions));
+app.use(cors({
+  origin: '*', 
+  methods: 'GET,POST,OPTIONS',
+  credentials: true,
+}));
 
 app.use(express.json({limit: '50mb'}));
 app.use(sessionMiddleware);
