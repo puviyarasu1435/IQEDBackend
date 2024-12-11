@@ -12,7 +12,7 @@ const sessionMiddleware = session({
   cookie: {
     httpOnly: null, // Prevents JS access to cookies // Set `true` if HTTPS is used
     maxAge: TTL,
-    secure: flase,
+    secure: false,
     sameSite: 'lax',
    // 1 hour in milliseconds
   },
