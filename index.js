@@ -47,6 +47,8 @@ const { main } = require("./app/Stream/User.Stream");
 
 // app.use(cors(corsOptions));
 app.use(cors({
+  origin: '*', 
+  methods: 'GET,POST,OPTIONS',
   credentials: true,
 }));
 
