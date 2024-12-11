@@ -47,7 +47,7 @@ const { main } = require("./app/Stream/User.Stream");
 
 // app.use(cors(corsOptions));
 app.use(cors({
-  origin: ["https://iqed-iq.vercel.app","http://localhost:5173/"], 
+  origin: ["https://gowthamrajvp.github.io/IQED/"], 
   methods:  ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true,
 }));
