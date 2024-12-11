@@ -39,10 +39,10 @@ const { main } = require("./app/Stream/User.Stream");
 
 const corsOptions = {
   origin: ["https://iqed-iq.vercel.app", "http://localhost:3000"], // Allow specific frontend URLs
-  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true, 
-  // preflightContinue: false,
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"], // Allowed HTTP methods
+  allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+  credentials: true, // Allow cookies and credentials
+  optionsSuccessStatus: 204, // Ensures compatibility for older browsers
 };
 
 app.use(cors(corsOptions));
