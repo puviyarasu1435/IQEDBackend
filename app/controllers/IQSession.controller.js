@@ -59,6 +59,7 @@ async function createIQSession(req, res) {
 
     const savedSession = await newSession.save();
     req.session.QuizToken = savedSession._id;
+    
 
     return res.status(201).json({
       message: "Session created successfully.",
@@ -72,7 +73,7 @@ async function createIQSession(req, res) {
 
 async function getIQSession(req, res) {
   try {
-    const sessionId = req.session.QuizToken;
+    const {sessionId} = req.body();
     if (!sessionId) {
       return res.status(400).json(req.session);
     }

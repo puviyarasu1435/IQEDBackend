@@ -6,7 +6,7 @@ const router = require("express").Router();
 
 // POST
 router.post("/createSession",createIQSession)
-router.get("/getSession",getIQSession)
+router.post("/getSession",getIQSession)
 router.put("/updateAnswers",updateIQSessionAnswers)
 router.post("/SendEmail",SendMail)
 
