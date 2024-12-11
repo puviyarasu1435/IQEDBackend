@@ -46,7 +46,9 @@ const { main } = require("./app/Stream/User.Stream");
 // };
 
 // app.use(cors(corsOptions));
-app.use(cors());
+app.use(cors({
+  credentials: true,
+}));
 
 app.use(express.json({limit: '50mb'}));
 app.use(sessionMiddleware);
