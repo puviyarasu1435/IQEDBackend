@@ -74,7 +74,7 @@ async function getIQSession(req, res) {
   try {
     const sessionId = req.session.QuizToken;
     if (!sessionId) {
-      return res.status(400).json({ message: "Invalid sessionId provided.",test:req.session.QuizToken });
+      return res.status(400).json({ message: `Invalid sessionId provided.${req}` });
     }
 
     const session = await IQSessionModel.findById(sessionId)
