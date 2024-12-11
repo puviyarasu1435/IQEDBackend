@@ -74,7 +74,7 @@ async function getIQSession(req, res) {
   try {
     const sessionId = req.session.QuizToken;
     if (!sessionId) {
-      return res.status(400).json(req);
+      return res.status(400).json(req.headers);
     }
 
     const session = await IQSessionModel.findById(sessionId)
