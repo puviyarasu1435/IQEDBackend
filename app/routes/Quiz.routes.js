@@ -5,7 +5,7 @@ const router = require("express").Router();
 
 // POST
 router.post("/createSession",createQuizSession)
-router.get("/getSession",getQuizSession)
+router.post("/getSession",getQuizSession)
 router.put("/updateAnswers",updateQuizSessionAnswers)
 
 

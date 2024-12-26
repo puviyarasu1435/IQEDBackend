@@ -70,7 +70,7 @@ app.use("/game", GameRoute);
 app.use("/IQ", IQRoute);
 
 //sockets
-// SocketConnection(server)
+SocketConnection(server)
 
 main().catch((err) => console.error(err));
 

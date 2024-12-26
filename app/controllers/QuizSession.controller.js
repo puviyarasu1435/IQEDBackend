@@ -51,11 +51,14 @@ async function createQuizSession(req, res) {
 }
 async function getQuizSession(req, res) {
   try {
-    const sessionId = req.session.QuizToken;
+    const {sessionId} = req.body;
     if (!sessionId) {
       return res.status(400).json({ message: "Invalid sessionId provided." });
     }
 
+
+
+    
     const session = await QuizSessionModel.findById(sessionId).populate("questionsList").exec();
 
     if (!session) {
