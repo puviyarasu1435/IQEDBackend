@@ -3,6 +3,7 @@ const { TopicModel } = require("../models");
 async function postTopicsInBulk(req, res) {
   try {
     // Validate that the request body is an array
+    console.log(req.body)
     if (!Array.isArray(req.body)) {
       return res.status(400).json({ message: "Input must be an array of topics." });
     }

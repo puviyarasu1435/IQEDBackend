@@ -27,6 +27,7 @@ const QuizRoute = require("./app/routes/Quiz.routes");
 const IQRoute = require("./app/routes/IQ.routes");
 const CareerRoute = require("./app/routes/Career.routes");
 const GameRoute = require("./app/routes/Game.routes");
+const AdminRoute = require("./app/routes/Admin.routes");
 
 const { main } = require("./app/Stream/User.Stream");
 
@@ -47,7 +48,7 @@ const { main } = require("./app/Stream/User.Stream");
 
 // app.use(cors(corsOptions));
 app.use(cors({
-  origin: ["https://iqed-iq.vercel.app","http://localhost:5173"], 
+  origin: ["https://iqed-iq.vercel.app","http://localhost:5173","http://localhost:3001"], 
   methods:  ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true,
 }));
@@ -68,6 +69,7 @@ app.use("/user", jwt_isVerify, CheckEarnings, UserRoute);
 app.use("/quiz", jwt_isVerify, CheckEarnings, QuizRoute);
 app.use("/game", GameRoute);
 app.use("/IQ", IQRoute);
+app.use("/admin", AdminRoute);
 
 //sockets
 SocketConnection(server)
