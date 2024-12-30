@@ -30,9 +30,10 @@ async function createQuizSession(req, res) {
       careerPath:{
         Section:sectionIndex,
         Lesson:lessonIndex,
-        Topic:topicIndex
+        Topic:topicIndex,
       },
       questionCount,
+      Topics:topic.name,
     });
 
     const savedSession = await newSession.save();

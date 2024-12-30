@@ -66,8 +66,7 @@ const GameSessionSchema = new Schema(
       },
     ],
     Topic: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Topics",
+      type: String,
     },
 
     questionCount: {

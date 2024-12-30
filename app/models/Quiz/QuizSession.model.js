@@ -34,6 +34,9 @@ const QuizSessionSchema = new Schema(
         required: true,
       }
     },
+    Topics:{
+      type:String,
+    },
     answeredQuestions: [
       {
         questionId: {

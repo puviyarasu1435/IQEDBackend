@@ -69,7 +69,7 @@ const SocketConnection = (server) => {
             RoomId:roomId, // Example host ID
             Players: rooms[roomId].players,
             questionsList: questionsList, // Add logic to populate questions later
-            Topic: TopicId, // Default topic; replace with real value
+            Topic: topic.name, // Default topic; replace with real value
             questionCount: 3,
           });
           session.save();
