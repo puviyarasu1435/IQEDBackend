@@ -54,7 +54,7 @@ const SocketConnection = (server) => {
     });
 
 
-    socket.on("start-game", async ({ roomId, UserId, TopicId="674be07aacefccaba22b165f" }, callback) => {
+    socket.on("start-game", async ({ roomId, UserId, TopicId="678b9dc939053772c9f9303a" }, callback) => {
       if (rooms[roomId]) {
         rooms[roomId].gameStarted = true;
         const topic = await TopicModel.findById(TopicId);
