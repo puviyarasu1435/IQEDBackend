@@ -1,7 +1,8 @@
 const bcrypt = require("bcrypt");
 const { jwt_GetToken } = require("../config/jwt.config");
-const { UserModel, SectionModel } = require("../models");
+const { UserModel } = require("../models");
 const MailTransporter = require("../config/mailer.config");
+const UserProgress = require("../models/User/UserProgress.model");
 
 const EmailOTP = {};
 
@@ -23,37 +24,32 @@ async function UserSignUp(req, res) {
       mobileNumber,
       userName,
     } = req.body;
+
     console.log(req.body);
 
+    // Check required fields
     if (!email || !password || !name || !age) {
       return res
         .status(400)
         .send("Required fields: email, password, name, and age.");
     }
 
+    // Check if the user already exists
     const existingUser = await UserModel.findOne({ "auth.email": email });
     if (existingUser) {
       return res.status(409).send("Email is already registered.");
     }
-    const sectionlist = await SectionModel.find().populate({
-      path: "lesson", // Populate the 'lesson' field
-      populate: {
-        path: "topics", // Populate the 'topics' field inside each lesson
-      },
-    });
-    console.log(sectionlist[0]);
-    if (!sectionlist || sectionlist.length === 0) {
-      return res.status(400).send("No sections found in the database.");
-    }
 
-    // Password hashing (if not done by pre-save hook in the schema)
-    // const hashedPassword = await bcrypt.hash(password, 10);
+
+
+    // Password hashing (uncomment and ensure bcrypt is imported)
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create new user object
     const newUser = new UserModel({
       auth: {
         email,
-        password, // Password will be hashed by the pre-save hook in your schema, or you can hash it here
+        password: hashedPassword, // Save the hashed password
       },
       name,
       age,
@@ -64,31 +60,16 @@ async function UserSignUp(req, res) {
       valueBaseQuest: {
         Quest: "6748fdb095e222aff65dc6b2",
       },
-      careerPathProgress: {
-        sections: [
-          {
-            sectionId: sectionlist[0]._id,
-            isCompleted: false,
-            lessons: [
-              {
-                lessonId: sectionlist[0].lesson[0]._id,
-                isCompleted: false,
-                topics: [
-                  {
-                    topicId: sectionlist[0].lesson[0].topics[0]._id,
-                    isCompleted: false,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
     });
 
-    // Check if section and lesson data exist
+    await newUser.save();
+    const progress = new UserProgress({
+      userId: newUser._id, 
+      courseId: "678b1c5ac9520c2779482c64", 
+    });
 
-    // Save the user to the database
+    await progress.save();
+    newUser.CourseProgress = progress._id;
     await newUser.save();
 
     return res.status(201).json({
@@ -100,6 +81,7 @@ async function UserSignUp(req, res) {
     return res.status(500).send("An error occurred during signup.");
   }
 }
+
 
 async function UserSignIn(req, res) {
   try {

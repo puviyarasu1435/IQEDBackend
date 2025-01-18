@@ -9,9 +9,13 @@ async function getUser(req, res) {
     console.log("Request ID:", req._id);
 
     const user = await UserModel.findOne({ _id: req._id })
-    .populate("valueBaseQuest.Quest") // Populate the valueBaseQuest.Quest reference
-    .populate("AchivedQuest") // Populate the AchivedQuest array references
+    .populate([
+      { path: 'valueBaseQuest.Quest', model: 'Quest' },  // Populate Quest field in valueBaseQuest
+      { path: 'CourseProgress', model: 'UserProgress' },  // Populate UserProgresses
+      { path: 'AchivedQuest', model: 'Quest' }            // Populate AchivedQuest
+    ])
     .exec();
+  
 
     if (!user) {
       return res.status(404).send("User not found.");
@@ -31,7 +35,7 @@ async function getUser(req, res) {
         mobilenumber: user.mobileNumber,
         earnings: user.earnings,
         valueBaseQuest: user.valueBaseQuest,
-        careerPathProgress: user.careerPathProgress,
+        CourseProgress: user.CourseProgress,
         AchivedQuest: user.AchivedQuest
       },
     });

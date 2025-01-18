@@ -99,6 +99,7 @@ const calculateIQ = async (userScore) => {
 
   const mean =
     updatedScores.reduce((sum, score) => sum + score, 0) / updatedScores.length;
+    
   const standardDeviation = Math.sqrt(
     updatedScores.reduce((sum, score) => sum + Math.pow(score - mean, 2), 0) /
       (updatedScores.length - 1)

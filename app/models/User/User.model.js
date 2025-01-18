@@ -94,25 +94,9 @@ const UserSchema = new Schema(
         min: 0,
       },
     },
-    careerPathProgress: {
-      sections: [
-        {
-          sectionId: { type: Schema.Types.ObjectId, ref: "Section" },
-          isCompleted: { type: Boolean, default: false },
-          lessons: [
-            {
-              lessonId: { type: Schema.Types.ObjectId, ref: "Lessons" },
-              isCompleted: { type: Boolean, default: false },
-              topics: [
-                {
-                  topicId: { type: Schema.Types.ObjectId, ref: "Topics" },
-                  isCompleted: { type: Boolean, default: false },
-                },
-              ],
-            },
-          ],
-        },
-      ],
+    CourseProgress:{
+      type:Schema.Types.ObjectId,
+      ref:"UserProgress",
     },
     CompletedTopic: [
       {

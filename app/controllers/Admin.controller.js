@@ -1,9 +1,9 @@
 const { UserModel } = require("../models");
-const moment = require("moment"); // Use moment.js or plain JavaScript for date calculation.
+const moment = require("moment"); 
 
 async function getUser(req, res) {
   try {
-    const startOfWeek = moment().startOf("week").toDate(); // Sunday at 00:00:00
+    const startOfWeek = moment().startOf("week").toDate(); 
     const endOfWeek = moment().endOf("week").toDate();
     const user = await UserModel.find();
     const totalUsers = await UserModel.countDocuments();

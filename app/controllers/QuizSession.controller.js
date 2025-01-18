@@ -1,5 +1,7 @@
-const { TopicModel, QuestionModel, QuizSessionModel, UserModel, SectionModel } = require("../models");
+const { TopicModel, QuestionModel, QuizSessionModel, UserModel } = require("../models");
 const mongoose = require("mongoose");
+const UserProgress = require("../models/User/UserProgress.model");
+const Course = require("../models/Career/Course.model");
 async function createQuizSession(req, res) {
   try {
     const { sectionIndex,lessonIndex,topicIndex,topicId, questionCount } = req.body;
@@ -73,36 +75,18 @@ async function getQuizSession(req, res) {
 }
 async function updateQuizSessionAnswers(req, res) {
   try {
-    const sessionId = req.session.QuizToken;
-    const { answeredQuestions, timeTaken } = req.body;
+    const { sessionId, answeredQuestions, timeTaken } = req.body;
 
     if (!timeTaken || !answeredQuestions || !Array.isArray(answeredQuestions)) {
       return res.status(400).json({ message: "Invalid answers provided." });
     }
 
-    // Fetch session
-    const session = await QuizSessionModel.findById(sessionId).populate(
-      "questionsList"
-    );
-    if (!session) {
-      return res.status(404).json({ message: "Session not found." });
-    }
+    const session = await QuizSessionModel.findById(sessionId).populate("questionsList");
+    if (!session) return res.status(404).json({ message: "Session not found." });
 
-    // Fetch Section List
-    const SectionList = await SectionModel.find().populate({
-      path: "lesson",
-      populate: {
-        path: "topics",
-      },
-    });
-
-    // Fetch user
     const user = await UserModel.findById(session.host);
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
+    if (!user) return res.status(404).json({ message: "User not found." });
 
-    // Update answeredQuestions and calculate score
     session.answeredQuestions = answeredQuestions;
     session.score = answeredQuestions.reduce((score, answer) => {
       const question = session.questionsList.find(
@@ -110,76 +94,35 @@ async function updateQuizSessionAnswers(req, res) {
       );
       return question && answer.correct ? score + 1 : score;
     }, 0);
-
-    // Update timeTaken
     session.timeTaken = timeTaken;
 
-    // Update status if all questions are answered
     if (answeredQuestions.length >= session.questionCount) {
       session.status = "completed";
     }
 
-    // Progression logic
-    const careerPath = user.careerPathProgress;
-    const { Section, Lesson, Topic } = session.careerPath;
+    const progress1 = await UserProgress.findById(user.CourseProgress);
+    if (!progress1) return res.status(404).json({ message: "Progress not found for this course" });
 
-    const currentSection = SectionList[Section];
-    const currentLesson = currentSection.lesson[Lesson];
-    const currentTopic = careerPath.sections[Section].lessons[Lesson].topics[Topic];
 
-    const isLastTopic = Topic >= currentLesson.topics.length - 1;
-    const isLastLesson = Lesson >= currentSection.lesson.length - 1;
-    const isLastSection = Section >= SectionList.length - 1;
-
-    // Mark current topic as completed if not already
-    if (!currentTopic.isCompleted) {
-      currentTopic.isCompleted = true;
+    
+    const course = await Course.findById("678b1c5ac9520c2779482c64");
+    
+    if(session.careerPath.Topic<course.units[session.careerPath.Section].lessons[session.careerPath.Lesson].topics.length){
+      progress1.currentTopic +=1;
+    }else if(session.careerPath.Lesson<course.units[session.careerPath.Section].lessons.length){
+      progress1.currentLesson +=1;
+    }else if(session.careerPath.Section<course.units.length){
+      progress1.currentTopic +=1;
     }
-
-    if (!isLastTopic) {
-      const nextTopic = currentLesson.topics[Topic + 1];
-      const existingTopic = careerPath.sections[Section].lessons[Lesson].topics.find(
-        (t) => t._id.toString() === nextTopic._id.toString()
-      );
-
-      // Only push the next topic if it hasn't already been completed
-      if (!existingTopic) {
-        careerPath.sections[Section].lessons[Lesson].topics.push(nextTopic);
-      }
-    } else if (!isLastLesson) {
-      const nextLesson = currentSection.lesson[Lesson + 1];
-      const existingLesson = careerPath.sections[Section].lessons.find(
-        (l) => l._id.toString() === nextLesson._id.toString()
-      );
-
-      // Only push the next lesson if it hasn't already been added
-      if (!existingLesson) {
-        careerPath.sections[Section].lessons.push(nextLesson);
-      }
-    } else if (!isLastSection) {
-      const nextSection = SectionList[Section + 1];
-      const existingSection = careerPath.sections.find(
-        (s) => s._id.toString() === nextSection._id.toString()
-      );
-
-      // Only push the next section if it hasn't already been added
-      if (!existingSection) {
-        careerPath.sections.push(nextSection);
-      }
-    } else {
-      // All sections, lessons, and topics are completed
-      session.status = "completed";
-    }
-
-    // Save updates
-    await user.save();
+    await progress1.save();
     await session.save();
 
     res.status(200).json(session);
   } catch (error) {
-    res.status(500).json({ message: "Error updating session answers", error });
+    res.status(500).json({ message: "Error updating session answers", error: error.message || error });
   }
 }
+
 
 
 

@@ -25,7 +25,7 @@ const AuthRoute = require("./app/routes/Auth.routes");
 const UserRoute = require("./app/routes/User.routes");
 const QuizRoute = require("./app/routes/Quiz.routes");
 const IQRoute = require("./app/routes/IQ.routes");
-const CareerRoute = require("./app/routes/Career.routes");
+const CourseRoute = require("./app/routes/Course.routes");
 const GameRoute = require("./app/routes/Game.routes");
 const AdminRoute = require("./app/routes/Admin.routes");
 
@@ -64,7 +64,7 @@ const PORT = process.env.PORT || 5000;
 // Route connections
 app.use("/", AppRoute);
 app.use("/auth", AuthRoute);
-app.use("/career", CareerRoute);
+app.use("/career", CourseRoute);
 app.use("/user", jwt_isVerify, CheckEarnings, UserRoute);
 app.use("/quiz", jwt_isVerify, CheckEarnings, QuizRoute);
 app.use("/game", GameRoute);
@@ -74,7 +74,7 @@ app.use("/admin", AdminRoute);
 //sockets
 SocketConnection(server)
 
-main().catch((err) => console.error(err));
+// main().catch((err) => console.error(err));
 
 // Start the server
 server.listen(PORT, () => {
