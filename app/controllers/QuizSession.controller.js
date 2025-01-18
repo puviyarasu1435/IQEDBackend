@@ -105,7 +105,7 @@ async function updateQuizSessionAnswers(req, res) {
 
 
     
-    const course = await Course.findById("678b1c5ac9520c2779482c64");
+    const course = await Course.findById("678bdccd39053772c9f9313a");
     
     if(session.careerPath.Topic<course.units[session.careerPath.Section].lessons[session.careerPath.Lesson].topics.length){
       progress1.currentTopic +=1;
