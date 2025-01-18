@@ -74,7 +74,7 @@ app.use("/admin", AdminRoute);
 //sockets
 SocketConnection(server)
 
-// main().catch((err) => console.error(err));
+main().catch((err) => console.error(err));
 
 // Start the server
 server.listen(PORT, () => {
