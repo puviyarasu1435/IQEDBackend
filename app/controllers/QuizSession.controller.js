@@ -107,12 +107,17 @@ async function updateQuizSessionAnswers(req, res) {
     
     const course = await Course.findById("678bdccd39053772c9f9313a");
     
-    if(session.careerPath.Topic<course.units[session.careerPath.Section].lessons[session.careerPath.Lesson].topics.length){
+    if(session.careerPath.Topic<course.units[session.careerPath.Section].lessons[session.careerPath.Lesson].topics.length-1){
+      console.log("session.careerPath.Topic",session.careerPath.Topic)
+      console.log("couse.topic",course.units[session.careerPath.Section].lessons[session.careerPath.Lesson].topics.length)
       progress1.currentTopic +=1;
     }else if(session.careerPath.Lesson<course.units[session.careerPath.Section].lessons.length){
       progress1.currentLesson +=1;
+      progress1.currentTopic =0;
     }else if(session.careerPath.Section<course.units.length){
-      progress1.currentTopic +=1;
+      progress1.currentUnit +=1;
+      progress1.currentLesson= 0;
+      progress1.currentTopic= 0;
     }
     await progress1.save();
     await session.save();
