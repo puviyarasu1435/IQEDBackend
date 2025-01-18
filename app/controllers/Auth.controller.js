@@ -65,7 +65,7 @@ async function UserSignUp(req, res) {
     await newUser.save();
     const progress = new UserProgress({
       userId: newUser._id, 
-      courseId: "678b1c5ac9520c2779482c64", 
+      courseId: "678bdccd39053772c9f9313a", 
     });
 
     await progress.save();
