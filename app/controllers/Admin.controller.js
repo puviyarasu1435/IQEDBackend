@@ -1,52 +1,87 @@
-const { UserModel } = require("../models");
-const moment = require("moment"); 
+const express = require("express");
 
-async function getUser(req, res) {
+const UserModel = require("../models/User/User.model"); // Assuming User model is in models/User.js
+
+
+
+// Get last 30 days active user count
+async function getActiveUsersLast30Days(req, res) {
   try {
-    const startOfWeek = moment().startOf("week").toDate(); 
-    const endOfWeek = moment().endOf("week").toDate();
-    const user = await UserModel.find();
-    const totalUsers = await UserModel.countDocuments();
-    const TotalUserRegister = await UserModel.find({
-      createdAt: {
-        $gte: startOfWeek,
-        $lte: endOfWeek,
-      },
-    });
-    const TotalUserLogin = await UserModel.find({
-      updatedAt: {
-        $gte: startOfWeek,
-        $lte: endOfWeek,
-      },
-    });
-    const ThisWeekLogin =
-      totalUsers === 0 || TotalUserLogin.length === 0
-        ? 0
-        : ((TotalUserLogin.length / totalUsers) * 100).toFixed(0);
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 7);
 
-    const ThisWeekRegister =
-      totalUsers === 0 || TotalUserRegister.length === 0
-        ? 0
-        : ((TotalUserRegister.length / totalUsers) * 100).toFixed(0);
-
-    if (!user) {
-      return res.status(404).send("User not found.");
-    }
-
-    return res.status(200).json({
-      UserCount: totalUsers,
-      WeekRegisterCount: ThisWeekRegister,
-      WeekLogin: ThisWeekLogin,
-      UserList: user,
+    const activeUsers = await UserModel.countDocuments({
+      updatedAt: { $gte: thirtyDaysAgo },
     });
+
+    res.json({ activeUsers });
   } catch (error) {
-    console.error(
-      "Error during getUser execution:",
-      error.message,
-      error.stack
-    );
-    return res.status(500).send("An error occurred. Please try again.");
+    res.status(500).json({ error: error.message });
   }
 }
 
-module.exports = { getUser };
+// Get total user count
+async function getTotalUsers(req, res) {
+  try {
+    const totalUsers = await UserModel.countDocuments();
+    res.json({ totalUsers });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// Helper function to get user count for the last 7 days
+const getUserCountForLast7Days = async (startDate) => {
+  const counts = [];
+  for (let i = 0; i < 7; i++) {
+    const dayStart = new Date(startDate);
+    dayStart.setDate(dayStart.getDate() - i);
+    dayStart.setHours(0, 0, 0, 0);
+
+    const dayEnd = new Date(dayStart);
+    dayEnd.setHours(23, 59, 59, 999);
+
+    const count = await UserModel.countDocuments({
+      createdAt: { $gte: dayStart, $lt: dayEnd },
+    });
+    counts.unshift(count); // Adds the count in reverse order
+  }
+  return counts;
+};
+
+// Get this week's user created count (last 7 days)
+async function getUsersCreatedThisWeek(req, res) {
+  try {
+    const today = new Date();
+    const last7DaysCounts = await getUserCountForLast7Days(today);
+    res.json({ last7DaysCounts });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// Get last week's user created count (previous 7 days)
+async function getUsersCreatedLastWeek(req, res) {
+  try {
+    const lastWeekStart = new Date();
+    lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+    const lastWeekCounts = await getUserCountForLast7Days(lastWeekStart);
+    res.json({ lastWeekCounts });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// Get all users without auth.password
+async function getAllUsers(req, res) {
+  try {
+    const users = await UserModel.find({}, { "auth.password": 0 });
+    res.json({ users });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+
+
+module.exports = {getActiveUsersLast30Days,getTotalUsers,getUsersCreatedThisWeek,getUsersCreatedLastWeek,getAllUsers};

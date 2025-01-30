@@ -1,0 +1,116 @@
+const FeedbackModel = require("../models/User/Feedback.model");
+const { PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const S3 = require("../config/aws.config");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+
+
+
+const BUCKET_NAME = process.env.S3_BUCKET_NAME;
+
+// Upload images to S3 and return only the file keys
+async function uploadImagesToS3(files) {
+  const fileKeys = [];
+
+  for (const file of files) {
+    const fileKey = `${Date.now()}-${file.originalname}`;
+    const params = {
+      Bucket: BUCKET_NAME,
+      Key: fileKey,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    };
+
+    await S3.send(new PutObjectCommand(params));
+    fileKeys.push(fileKey);
+  }
+
+  return fileKeys;
+}
+
+// Generate signed URLs for stored file keys
+async function generateSignedUrls(imageKeys) {
+  const signedUrls = await Promise.all(
+    imageKeys.map(async (key) => {
+      return await getSignedUrl(
+        S3,
+        new GetObjectCommand({
+          Bucket: BUCKET_NAME,
+          Key: key,
+        }),
+        { expiresIn: 3600 } // URL expires in 1 hour
+      );
+    })
+  );
+  return signedUrls;
+}
+
+// POST Feedback
+async function FeedbackPost(req, res) {
+  try {
+    const { type, feedback } = req.body;
+    let imageList = [];
+
+    if (type === "bug" && req.files) {
+      imageList = await uploadImagesToS3(req.files); // Store only file keys
+    }
+
+    const feedbackData = {
+      userId:req._id,
+      type,
+      feedback,
+      imageList, // Store file keys, not URLs
+    };
+
+    const newFeedback = new FeedbackModel(feedbackData);
+    await newFeedback.save();
+
+    res.status(201).json({
+      message: "Feedback submitted successfully",
+      feedback: newFeedback,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// GET all Feedback
+async function FeedbackGet(req, res) {
+  try {
+    const feedbacks = await FeedbackModel.find().populate("userId", "name email");
+
+    // Convert stored file keys to signed URLs
+    const feedbacksWithUrls = await Promise.all(
+      feedbacks.map(async (feedback) => {
+        feedback = feedback.toObject();
+        feedback.imageList = await generateSignedUrls(feedback.imageList);
+        return feedback;
+      })
+    );
+
+    res.status(200).json(feedbacksWithUrls);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// GET Feedback by ID
+async function FeedbackGetById(req, res) {
+  try {
+    let feedback = await FeedbackModel.findById(req.params.id).populate("userId", "name email");
+    if (!feedback) return res.status(404).json({ message: "Feedback not found" });
+
+    feedback = feedback.toObject();
+    feedback.imageList = await generateSignedUrls(feedback.imageList); // Convert file keys to URLs
+
+    res.status(200).json(feedback);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// Routes
+
+
+module.exports = {
+    FeedbackGetById,FeedbackGet,FeedbackPost
+};

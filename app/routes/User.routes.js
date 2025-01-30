@@ -1,6 +1,11 @@
+const { FeedbackPost, FeedbackGet, FeedbackGetById } = require("../controllers/Feedback.controller");
+const { getOrderById, createOrder, getAllUserOrders } = require("../controllers/Order.controller");
+const { getAllProducts, getProductById } = require("../controllers/Product.controller");
 const { getUser, getEarnings, putXP, putGem, getleaderboard, UpdateUser } = require("../controllers/User.controller");
 const router = require("express").Router();
-
+const multer  = require('multer');
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 
 // GET
 router.get("/get",getUser)
@@ -11,6 +16,15 @@ router.get("/leaderboard",getleaderboard)
 router.put("/xp",putXP)
 router.put("/iqgem",putGem)
 router.put("/update",UpdateUser)
+
+
+router.post("/feedback", upload.array("images"), FeedbackPost);
+router.get('/products', getAllProducts);
+router.get("/products/:id", getProductById);
+
+router.post("/orders", createOrder);
+router.get("/orders", getAllUserOrders);
+router.get("/orders/:id", getOrderById);
 
 
 module.exports = router;
