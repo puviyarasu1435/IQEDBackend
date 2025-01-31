@@ -17,6 +17,11 @@ const IQSessionSchema = new Schema(
       enum: ["pending", "completed"],
       default: "pending",
     },
+    UserLevel: {
+      type: String,
+      enum: ["children", "adolescents","adults"],
+      required: true,
+    },
     questionsList: [
       {
         type: mongoose.Schema.Types.ObjectId,

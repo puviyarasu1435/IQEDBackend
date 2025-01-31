@@ -6,7 +6,6 @@ const GameSessionModel = require("./Game/GameSession.model");
 const IQQuestionModel = require("./IQ/IQQuestion.model");
 const IQSessionModel = require("./IQ/IQSession.model");
 const IQModel = require("./IQ/IQData.model");
-
 module.exports = {
   UserModel,
   TopicModel,
