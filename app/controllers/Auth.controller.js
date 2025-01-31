@@ -20,6 +20,7 @@ async function UserSignUp(req, res) {
       name,
       age,
       schoolName,
+      parentsName,
       grade,
       mobileNumber,
       userName,
@@ -28,7 +29,7 @@ async function UserSignUp(req, res) {
     console.log(req.body);
 
     // Check required fields
-    if (!email || !password || !name || !age) {
+    if (!email || !password || !name || !age || !parentsName) {
       return res
         .status(400)
         .send("Required fields: email, password, name, and age.");
@@ -39,8 +40,6 @@ async function UserSignUp(req, res) {
     if (existingUser) {
       return res.status(409).send("Email is already registered.");
     }
-
-
 
     // Password hashing (uncomment and ensure bcrypt is imported)
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -56,6 +55,7 @@ async function UserSignUp(req, res) {
       schoolName,
       grade,
       mobileNumber,
+      parentsName,
       userName,
       valueBaseQuest: {
         Quest: "6748fdb095e222aff65dc6b2",
@@ -64,8 +64,8 @@ async function UserSignUp(req, res) {
 
     await newUser.save();
     const progress = new UserProgress({
-      userId: newUser._id, 
-      courseId: "678bdccd39053772c9f9313a", 
+      userId: newUser._id,
+      courseId: "678bdccd39053772c9f9313a",
     });
 
     await progress.save();
@@ -81,7 +81,6 @@ async function UserSignUp(req, res) {
     return res.status(500).send("An error occurred during signup.");
   }
 }
-
 
 async function UserSignIn(req, res) {
   try {
@@ -109,7 +108,9 @@ async function UserSignIn(req, res) {
 
     req.session.Token = token;
 
-    return res.status(200).json({ message: "Authentication successful",token });
+    return res
+      .status(200)
+      .json({ message: "Authentication successful", token });
   } catch (error) {
     console.error("Error during authentication:", error);
     return res.status(500).send("An error occurred. Please try again.");
@@ -188,16 +189,33 @@ async function checkEmailExists(req, res) {
     return res.status(500).send("An error occurred. Please try again.");
   }
 }
-
-async function sendEmail(toEmail,userid,cpassword,url) {
+async function checkUserNameExists(req, res) {
   try {
-   
-    
+    const { UserName } = req.query;
+
+    if (!UserName) {
+      return res.status(200).json({ message: "UserName are required." });
+    }
+
+    const user = await UserModel.findOne({ userName: UserName });
+    // console.log(user);
+    if (user) {
+      return res.status(200).send(true);
+    }
+    return res.status(401).send(false);
+  } catch (error) {
+    console.error("Error during authentication:", error);
+    return res.status(500).send("An error occurred. Please try again.");
+  }
+}
+
+async function sendEmail(toEmail, userid, cpassword, url) {
+  try {
     const mailOptions = {
       from: process.env.Mail_User,
       to: toEmail,
       subject: "IQED | FORGETPASSWORD",
-      html:`<a href='${url}/forget/${userid}/?token="${cpassword}"' target='_blank'>Change New Password</a>`,
+      html: `<a href='${url}/forget/${userid}/?token="${cpassword}"' target='_blank'>Change New Password</a>`,
     };
 
     await MailTransporter.sendMail(mailOptions);
@@ -210,42 +228,46 @@ async function sendEmail(toEmail,userid,cpassword,url) {
 
 async function ForgetPassword(req, res) {
   try {
-    const { toEmail,url } = req.body;
+    const { toEmail, url } = req.body;
     const user = await UserModel.findOne({ "auth.email": toEmail });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    
-    await sendEmail(toEmail,user._id,user.auth.password,url).then(()=>{
-      res.status(200).json({message: "Forget Link Send to Your Email"});
-    }).catch((e)=>{
-      res.status(400).json({message: e});
-    });
-  
+
+    await sendEmail(toEmail, user._id, user.auth.password, url)
+      .then(() => {
+        res.status(200).json({ message: "Forget Link Send to Your Email" });
+      })
+      .catch((e) => {
+        res.status(400).json({ message: e });
+      });
   } catch (error) {
     console.error("Error updating user profile:", error);
     res.status(500).json({ message: "Server error" });
   }
 }
 
-
 async function NewPassword(req, res) {
   try {
     const { userid, token, NewPassword } = req.body;
 
     // Find user by ID and token
-    const user = await UserModel.findOne({ "_id": userid, "auth.password": token });
+    const user = await UserModel.findOne({
+      _id: userid,
+      "auth.password": token,
+    });
 
     if (!user || !NewPassword) {
-      return res.status(404).json({ message: "User not found or Token Expire" });
+      return res
+        .status(404)
+        .json({ message: "User not found or Token Expire" });
     }
-    console.log(token)
-    
+    console.log(token);
+
     const hashedPassword = await bcrypt.hash(NewPassword, 10);
 
-    
     user.auth.password = hashedPassword;
-    await user.save(); 
+    await user.save();
 
     return res.status(200).json({ message: "Password Changed" });
   } catch (error) {
@@ -254,8 +276,6 @@ async function NewPassword(req, res) {
   }
 }
 
-
-
 module.exports = {
   UserSignIn,
   UserSignUp,
@@ -263,5 +283,6 @@ module.exports = {
   verifyEmailOTP,
   checkEmailExists,
   ForgetPassword,
-  NewPassword
+  NewPassword,
+  checkUserNameExists
 };
