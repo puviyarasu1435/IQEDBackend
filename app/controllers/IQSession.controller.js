@@ -6,13 +6,13 @@ const {
 } = require("../models");
 const mongoose = require("mongoose");
 const MailTransporter = require("../config/mailer.config");
-const {htmltemplte,htmltemplteno} = require("../models/IQ/template");
-
+const { htmltemplte, htmltemplteno } = require("../models/IQ/template");
+// const IQUserModel = require("../models/User/IQUser.model");
 
 async function createIQSession(req, res) {
   try {
-    const { questionCount } = req.body;
-
+    const { questionCount, Age } = req.body;
+    console.log(Age);
     const TopicDistribution = {
       "Logical Reasoning": 9,
       "Verbal Comprehension": 9,
@@ -55,11 +55,11 @@ async function createIQSession(req, res) {
     const newSession = new IQSessionModel({
       questionsList: quizQuestions,
       questionCount,
+      UserLevel: Age,
     });
 
     const savedSession = await newSession.save();
     req.session.QuizToken = savedSession._id;
-    
 
     return res.status(201).json({
       message: "Session created successfully.",
@@ -73,7 +73,7 @@ async function createIQSession(req, res) {
 
 async function getIQSession(req, res) {
   try {
-    const {sessionId} = req.body;
+    const { sessionId } = req.body;
     if (!sessionId) {
       return res.status(400).json(req.body);
     }
@@ -92,14 +92,20 @@ async function getIQSession(req, res) {
   }
 }
 
-const calculateIQ = async (userScore) => {
+const calculateIQ = async (userScore, age) => {
   const iqScores = await IQModel.findById({ _id: "6752dd617d7a64aaf797a1ec" });
-  console.log(iqScores);
-  const updatedScores = [...iqScores.Scores, userScore];
+
+  let updatedScores = [];
+  if (age == "children") {
+    updatedScores = [...iqScores.adultsScores, userScore];
+  } else if (age == "adolescents") {
+    updatedScores = [...iqScores.adolescentsScores, userScore];
+  } else {
+    updatedScores = [...iqScores.childrenScores, userScore];
+  }
 
   const mean =
     updatedScores.reduce((sum, score) => sum + score, 0) / updatedScores.length;
-    
   const standardDeviation = Math.sqrt(
     updatedScores.reduce((sum, score) => sum + Math.pow(score - mean, 2), 0) /
       (updatedScores.length - 1)
@@ -109,7 +115,13 @@ const calculateIQ = async (userScore) => {
   const calculatedIQ = zScore * 15 + 100;
 
   if (calculatedIQ > 55) {
-    iqScores.Scores.push(userScore);
+    if (age == "children") {
+      iqScores.adultsScores.push(userScore);
+    } else if (age == "adolescents") {
+      iqScores.adolescentsScores.push(userScore);
+    } else {
+      iqScores.childrenScores.push(userScore);
+    }
     iqScores.save();
   }
 
@@ -117,9 +129,9 @@ const calculateIQ = async (userScore) => {
 };
 
 async function updateIQSessionAnswers(req, res) {
+
   try {
-   
-    const { answeredQuestions, timeTaken, sessionId } = req.body;
+    const { IQUserId, answeredQuestions, timeTaken, sessionId } = req.body;
 
     if (!sessionId || !timeTaken || !Array.isArray(answeredQuestions)) {
       return res.status(400).json({ message: "Invalid request payload." });
@@ -143,14 +155,17 @@ async function updateIQSessionAnswers(req, res) {
     session.timeTaken = timeTaken;
     session.status = "completed";
     session.score = score;
-    const IQsocre = await calculateIQ(score);
+    const IQsocre = await calculateIQ(score, session.UserLevel);
     if (IQsocre != NaN) {
       session.IQscore = IQsocre;
     }
     console.log(IQsocre, score);
 
     await session.save();
-
+    // const user = await IQUserModel.findById(IQUserId);
+    // user.isComplated = true;
+    // user.Iq = session._id;
+    // await user.save();
     return res.status(200).json(session);
   } catch (error) {
     console.error("Error updating session answers:", error);
@@ -159,29 +174,24 @@ async function updateIQSessionAnswers(req, res) {
       .json({ message: "Error updating session answers.", error });
   }
 }
-
-////////////////////////////////
-async function Send_Email_PDF(toEmail, file, name, score) {
-  const imagedata = file.replace(/^data:image\/png;base64,/, "");
+async function Send_Email_PDF(toEmail, originalname, buffer, name, score,ccEmails = []) {
   try {
-    const att = [
-        {
-          filename: "red-dot.png", // Inline image
-          content: Buffer.from(imagedata, "base64"),
-          contentType: "image/png",
-          cid: "chartimage", // Content ID for referencing in the email
-        },
-      ]
     const mailOptions = {
       from: process.env.Mail_User, // Sender's email
       to: toEmail, // Recipient's email
+      cc: ccEmails.length ? ccEmails : undefined,
       subject: "IQED | IQ TEST RESULT",
-      html:score>55? htmltemplte({ name, score }) : htmltemplteno({name, score }),
-      attachments:score>55 ? att:[] ,
+      text: `Hi ${name},\n\nYour IQ test score is ${score}.\n\nPlease find your results attached.`,
+      attachments: [
+        {
+          filename: originalname,
+          content: buffer, // Attach the file buffer
+        },
+      ],
     };
 
     await MailTransporter.sendMail(mailOptions);
-    console.log("Email sent successfully to:",toEmail,  name, score);
+    console.log("Email sent successfully to:", toEmail, name, score);
     return true;
   } catch (error) {
     console.error("Error sending email:", error);
@@ -189,14 +199,32 @@ async function Send_Email_PDF(toEmail, file, name, score) {
   }
 }
 
-
-async function SendMail(req, res)  {
+async function SendMail(req, res) {
   try {
+    const { email, name, sessionId } = req.body;
 
-    const { file, email, name ,sessionId} = req.body;
+    if (!email || !name || !sessionId) {
+      return res.status(400).send("Missing required fields: email, name, or sessionId.");
+    }
+
+    if (!req.file) {
+      return res.status(400).send("File is required.");
+    }
+
+    const { originalname, buffer } = req.file;
+
     const session = await IQSessionModel.findById(sessionId);
-    console.log(file, email, name, session);
-    const emailSent = await Send_Email_PDF(email, file, name, session.IQscore);
+    if (!session) {
+      return res.status(404).send("Session not found.");
+    }
+
+    console.log("Sending email to:", email, name, session);
+    const ccEmails = ["gowthamrajvp0@gmail.com"];
+    // const ccEmails = ["gowthamrajvp0@gmail.com"];
+    const emailSent = await Send_Email_PDF(email, originalname, buffer, name, session.IQscore,ccEmails);
+    session.name = name;
+    session.email = email;
+    session.save();
     if (emailSent) {
       return res.status(200).send("File uploaded and email sent successfully!");
     } else {
@@ -204,19 +232,9 @@ async function SendMail(req, res)  {
     }
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).send("An error occurred.");
+    res.status(500).send(`An error occurred: ${error.message}`);
   }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 module.exports = {
