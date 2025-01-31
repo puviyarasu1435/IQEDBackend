@@ -89,19 +89,19 @@ async function UserSignIn(req, res) {
     if (!email || !password) {
       return res
         .status(400)
-        .json({ message: "Email and password are required." });
+        .send({ message: "Email and password are required." });
     }
 
     const user = await UserModel.findOne({ "auth.email": email }).select(
       "_id auth"
     );
     if (!user) {
-      return res.status(401).json({ message: "User not found." });
+      return res.status(404).send({ message: "User not found." });
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.auth.password);
     if (!isPasswordMatch) {
-      return res.status(401).json({ message: "Invalid email or password." });
+      return res.status(404).send({ message: "Invalid password." });
     }
 
     const token = jwt_GetToken({ _id: user._id });

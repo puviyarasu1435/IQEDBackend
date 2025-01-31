@@ -39,7 +39,6 @@ const UserSchema = new Schema(
     },
     parentsName: {
       type: String,
-      required: true,
     },
     schoolName: {
       type: String,
