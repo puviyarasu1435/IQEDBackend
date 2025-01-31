@@ -151,7 +151,7 @@ async function UpdateUser(req, res) {
         name: user.name,
         email: user.auth.email,
         profile: user.profileImage,
-        username: user.username,
+        username: user.userName,
         age: user.age,
         schoolname: user.schoolName,
         grade: user.grade,
@@ -165,5 +165,6 @@ async function UpdateUser(req, res) {
     res.status(500).json({ message: "Server error" });
   }
 }
+
 
 module.exports = { getUser, getEarnings, putXP, putGem, getleaderboard ,UpdateUser};

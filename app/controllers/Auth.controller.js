@@ -189,10 +189,79 @@ async function checkEmailExists(req, res) {
   }
 }
 
+async function sendEmail(toEmail,userid,cpassword,url) {
+  try {
+   
+    
+    const mailOptions = {
+      from: process.env.Mail_User,
+      to: toEmail,
+      subject: "IQED | FORGETPASSWORD",
+      html:`<a href='${url}/forget/${userid}/?token="${cpassword}"' target='_blank'>Change New Password</a>`,
+    };
+
+    await MailTransporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return false;
+  }
+}
+
+async function ForgetPassword(req, res) {
+  try {
+    const { toEmail,url } = req.body;
+    const user = await UserModel.findOne({ "auth.email": toEmail });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    await sendEmail(toEmail,user._id,user.auth.password,url).then(()=>{
+      res.status(200).json({message: "Forget Link Send to Your Email"});
+    }).catch((e)=>{
+      res.status(400).json({message: e});
+    });
+  
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+
+async function NewPassword(req, res) {
+  try {
+    const { userid, token, NewPassword } = req.body;
+
+    // Find user by ID and token
+    const user = await UserModel.findOne({ "_id": userid, "auth.password": token });
+
+    if (!user || !NewPassword) {
+      return res.status(404).json({ message: "User not found or Token Expire" });
+    }
+    console.log(token)
+    
+    const hashedPassword = await bcrypt.hash(NewPassword, 10);
+
+    
+    user.auth.password = hashedPassword;
+    await user.save(); 
+
+    return res.status(200).json({ message: "Password Changed" });
+  } catch (error) {
+    console.error("Error updating user password:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+
+
 module.exports = {
   UserSignIn,
   UserSignUp,
   sendEmailOTP,
   verifyEmailOTP,
   checkEmailExists,
+  ForgetPassword,
+  NewPassword
 };

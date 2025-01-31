@@ -1,4 +1,4 @@
-const { UserSignIn,UserSignUp, sendEmailOTP, verifyEmailOTP, checkEmailExists } = require("../controllers/Auth.controller");
+const { UserSignIn,UserSignUp, sendEmailOTP, verifyEmailOTP, checkEmailExists, ForgetPassword, NewPassword } = require("../controllers/Auth.controller");
 const router = require("express").Router();
 
 
@@ -8,6 +8,8 @@ router.post("/register",UserSignUp)
 router.post("/sendEmailOTP",sendEmailOTP)
 router.post("/verifyEmail",verifyEmailOTP)
 router.post("/checkEmailExists",checkEmailExists)
+router.post("/ForgetPassword",ForgetPassword)
+router.post("/NewPassword",NewPassword)
 
 
 module.exports = router;
