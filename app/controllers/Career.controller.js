@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const { CareerPath, Lesson, Level } = require("../models/Test/careerpath");
+const UserProgress = require("../models/User/UserProgress.model");
 
 async function bulkCareerPaths(req, res) {
   try {
@@ -49,28 +50,60 @@ async function bulkCareerPaths(req, res) {
       .json({ message: "Error in bulk career path insertion", error });
   }
 }
+// async function GetCareerpathById(req, res) {
+//   try {
+//     const careerPath = await CareerPath.findById(req.params.id)
+//       .populate("levels","_id lessons")
+//     if (!careerPath)
+//       return res.status(404).json({ message: "Course not found" });
+
+//     res.status(200).json(careerPath);
+//   } catch (error) {
+//     res.status(500).json({ message: "Error fetching course", error });
+//   }
+// }
+
 async function GetCareerpathById(req, res) {
-  try {
-    const careerPath = await CareerPath.findById(req.params.id)
-    .populate({
-      path: "levels",
-      populate: {
-        path: "lessons",
-        model: "Lesson1", // Explicitly specifying the model
-        populate: {
-          path: "topics",
-          model: "Topics", // Ensure this matches the correct model name
-        },
-      },
-    });
+    try {
+       // Assuming the user ID is in request params
+      if (!req._id) {
+        return res.status(400).send("Request ID is missing.");
+      }
+      const userProgress = await UserProgress.aggregate([
+        { $match: { user: new mongoose.Types.ObjectId(req._id) } },
+        { $unwind: "$levelProgress" },
+        { $unwind: "$levelProgress.lessonProgress" },
+        { $unwind: "$levelProgress.lessonProgress.topicProgress" },
+        { $match: { "levelProgress.lessonProgress.topicProgress.completed": true } },
   
-
-    // if (!careerPath)
-    //   return res.status(404).json({ message: "Course not found" });
-
-    res.status(200).json(course);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching course", error });
+        // Lookup to populate 'topic'
+        {
+          $lookup: {
+            from: "topics", // Collection name in MongoDB (check your actual name)
+            localField: "levelProgress.lessonProgress.topicProgress.topic",
+            foreignField: "_id",
+            as: "topicDetails",
+          },
+        },
+  
+        // Flatten the topicDetails array
+        { $unwind: "$topicDetails" },
+  
+        // Project the final output
+        {
+          $project: {
+            _id: 0,
+            topic: "$topicDetails", // Full topic document
+            score: "$levelProgress.lessonProgress.topicProgress.score",
+            lastSessionTime: "$levelProgress.lessonProgress.topicProgress.LastSessionTime",
+          },
+        },
+      ]);
+  
+      res.status(200).json(userProgress);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching completed topics", error });
+    }
   }
-}
+  
 module.exports = { bulkCareerPaths, GetCareerpathById };
