@@ -122,7 +122,8 @@ async function updateQuizSessionAnswers(req, res) {
       lessonId: session.careerPath.Lesson,
       topicId: session.careerPath.Topic,
       score: session.score,
-      LastSessionTime:session.timeTaken
+      LastSessionTime:session.timeTaken,
+      totalquiz:session.questionCount
     });
     await session.save();
 

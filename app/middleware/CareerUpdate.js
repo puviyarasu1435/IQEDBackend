@@ -64,7 +64,7 @@ async function UpdateProgress(req, res) {
     res.status(500).json({ message: "Server error" });
   }
 }
-async function UpdateProgressfunction({ userId, careerPathId, levelId, lessonId, topicId, score ,LastSessionTime}) {
+async function UpdateProgressfunction({ userId, careerPathId, levelId, lessonId, topicId, score ,LastSessionTime,totalquiz}) {
     console.log("fn----",userId, careerPathId, levelId, lessonId, topicId, score)
     try {
       let userProgress = await UserProgress.findOne({
@@ -96,8 +96,10 @@ async function UpdateProgressfunction({ userId, careerPathId, levelId, lessonId,
       }
   
       topicProgress.completed = true;
-      topicProgress.score = score;
-      topicProgress.LastSessionTime=LastSessionTime;
+      if((score/totalquiz)*100 >=80){          
+          topicProgress.score = score;
+          topicProgress.LastSessionTime=LastSessionTime;
+ 
       const allTopicsCompleted = lessonProgress.topicProgress.every(
         (lp) => lp.completed
       );
@@ -113,7 +115,7 @@ async function UpdateProgressfunction({ userId, careerPathId, levelId, lessonId,
       }
   
       await userProgress.updateProgress();
-  
+    }
       console.log({
         message: "Lesson completed and progress updated",
         userProgress,
