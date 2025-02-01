@@ -3,6 +3,7 @@ const { jwt_GetToken } = require("../config/jwt.config");
 const { UserModel } = require("../models");
 const MailTransporter = require("../config/mailer.config");
 const UserProgress = require("../models/User/UserProgress.model");
+const { CareerPath, Lesson, Level } = require("../models/Test/careerpath");
 
 const EmailOTP = {};
 
@@ -28,23 +29,18 @@ async function UserSignUp(req, res) {
 
     console.log(req.body);
 
-    // Check required fields
     if (!email || !password || !name || !age || !parentsName) {
       return res
         .status(400)
         .send("Required fields: email, password, name, and age.");
     }
 
-    // Check if the user already exists
     const existingUser = await UserModel.findOne({ "auth.email": email });
     if (existingUser) {
       return res.status(409).send("Email is already registered.");
     }
-
-    // Password hashing (uncomment and ensure bcrypt is imported)
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user object
     const newUser = new UserModel({
       auth: {
         email,
@@ -63,13 +59,54 @@ async function UserSignUp(req, res) {
     });
 
     await newUser.save();
-    const progress = new UserProgress({
-      userId: newUser._id,
-      courseId: "678bdccd39053772c9f9313a",
+
+    const careerPaths = await CareerPath.findOne()
+  .populate({
+    path: "levels",
+    populate: {
+      path: "lessons"
+    },
+  });
+    console.log(careerPaths)
+    const progressRecords = [];
+
+    const newUserProgress = new UserProgress({
+      user: newUser._id,
+      careerPath: careerPaths._id,
+      levelProgress: [],
     });
 
-    await progress.save();
-    newUser.CourseProgress = progress._id;
+    for (const level of careerPaths.levels) {
+      const newLevelProgress = {
+        level: level._id,
+        completed: false,
+        lessonProgress: [],
+      };
+
+      for (const lesson of level.lessons) {
+        const newLessonProgress = {
+          lesson: lesson._id,
+          completed: false,
+          topicProgress: [],
+        };
+
+        for (const topic of lesson.topics) {
+          newLessonProgress.topicProgress.push({
+            topic: topic._id,
+            completed: false,
+            score: 0,
+          });
+        }
+
+        newLevelProgress.lessonProgress.push(newLessonProgress);
+      }
+
+      newUserProgress.levelProgress.push(newLevelProgress);
+    }
+
+    await newUserProgress.save();
+    progressRecords.push(newUserProgress._id);
+    newUser.CourseProgress = progressRecords[0];
     await newUser.save();
 
     return res.status(201).json({
@@ -284,5 +321,5 @@ module.exports = {
   checkEmailExists,
   ForgetPassword,
   NewPassword,
-  checkUserNameExists
+  checkUserNameExists,
 };

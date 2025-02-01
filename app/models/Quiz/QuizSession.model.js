@@ -21,18 +21,9 @@ const QuizSessionSchema = new Schema(
       },
     ],
     careerPath: {
-      Section:{
-        type: Number,
-        required: true,
-      },
-      Lesson:{
-        type: Number,
-        required: true,
-      },
-      Topic:{
-        type: Number,
-        required: true,
-      }
+      Level:{ type: mongoose.Schema.Types.ObjectId, ref: "Level" },
+      Lesson:{ type: mongoose.Schema.Types.ObjectId, ref: "Lesson1" },
+      Topic:{ type: mongoose.Schema.Types.ObjectId, ref: "Topic" }
     },
     Topics:{
       type:String,

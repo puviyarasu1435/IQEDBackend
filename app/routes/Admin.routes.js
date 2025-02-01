@@ -6,6 +6,7 @@ const {
   getUsersCreatedLastWeek,
   getAllUsers,
 } = require("../controllers/Admin.controller");
+const { bulkCareerPaths } = require("../controllers/Career.controller");
 const {
   FeedbackGet,
   FeedbackGetById,
@@ -18,6 +19,7 @@ const {
   createProduct,
   getAllProducts,
 } = require("../controllers/Product.controller");
+const { UpdateProgress } = require("../middleware/CareerUpdate");
 
 const router = require("express").Router();
 
@@ -41,5 +43,10 @@ router.get("/orders", getAllOrders);
 router.get("/orders/:id", getOrderById);
 router.put("/orders/:id/status", updateOrderStatus);
 router.delete("/orders/:id", deleteOrder);
+
+router.post("/bulkCareerPaths", bulkCareerPaths);
+router.post("/UpdateProgress", UpdateProgress);
+
+
 
 module.exports = router;

@@ -4,7 +4,6 @@ const Course = require('../models/Career/Course.model');
 // Create a new course
 async function newCourse(req, res) {
     const { name, description, units } = req.body;
-  
     try {
       const course = new Course({ name, description, units });
       await course.save();

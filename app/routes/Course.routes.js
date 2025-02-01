@@ -1,3 +1,4 @@
+const { GetCareerpathById } = require("../controllers/Career.controller");
 const {
   newCourse,
   GetCourse,
@@ -30,6 +31,7 @@ router.delete("/topics/:id", deleteTopic);
 router.post("/courses", newCourse);
 router.get("/courses", GetCourse);
 router.get("/courses/:id", GetCourseById);
+router.get("/Careerpath/:id", GetCareerpathById);
 
 // router.post("/quest", createQuest);
 

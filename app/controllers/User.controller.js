@@ -1,4 +1,5 @@
 const { UserModel } = require("../models");
+const UserProgress = require("../models/User/UserProgress.model");
 
 async function getUser(req, res) {
   try {
@@ -10,13 +11,25 @@ async function getUser(req, res) {
 
     const user = await UserModel.findOne({ _id: req._id })
     .populate([
-      { path: 'valueBaseQuest.Quest', model: 'Quest' },  // Populate Quest field in valueBaseQuest
-      { path: 'CourseProgress', model: 'UserProgress' },  // Populate UserProgresses
+      { path: 'valueBaseQuest.Quest', model: 'Quest' },  // Populate Quest field in valueBaseQuest  // Populate UserProgresses
       { path: 'AchivedQuest', model: 'Quest' }            // Populate AchivedQuest
     ])
     .exec();
   
-
+    const userProgress = await UserProgress.findById(user.CourseProgress)
+    .populate({
+      path: "careerPath",
+      select: "name description",
+    })
+    .populate({
+      path: "levelProgress.level",
+    })
+    .populate({
+      path: "levelProgress.lessonProgress.lesson",
+    })
+    .populate({
+      path: "levelProgress.lessonProgress.topicProgress.topic",
+    });
     if (!user) {
       return res.status(404).send("User not found.");
     }
@@ -35,7 +48,7 @@ async function getUser(req, res) {
         mobilenumber: user.mobileNumber,
         earnings: user.earnings,
         valueBaseQuest: user.valueBaseQuest,
-        CourseProgress: user.CourseProgress,
+        CourseProgress: userProgress,
         AchivedQuest: user.AchivedQuest
       },
     });
