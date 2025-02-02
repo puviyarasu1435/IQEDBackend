@@ -13,6 +13,11 @@ const QuizSessionSchema = new Schema(
       enum: ["pending", "completed"],
       default: "pending",
     },
+    type: {
+      type: String,
+      enum: ["Quiz", "Challenge"],
+      default: "Quiz",
+    },
     questionsList: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -21,12 +26,13 @@ const QuizSessionSchema = new Schema(
       },
     ],
     careerPath: {
-      Level:{ type: mongoose.Schema.Types.ObjectId, ref: "Level" },
-      Lesson:{ type: mongoose.Schema.Types.ObjectId, ref: "Lesson1" },
-      Topic:{ type: mongoose.Schema.Types.ObjectId, ref: "Topic" }
+      Level: { type: mongoose.Schema.Types.ObjectId, ref: "Level" },
+      Lesson: { type: mongoose.Schema.Types.ObjectId, ref: "Lesson1" },
+      Topic: { type: mongoose.Schema.Types.ObjectId, ref: "Topic" },
     },
-    Topics:{
-      type:String,
+    Challenge: { type: mongoose.Schema.Types.ObjectId, ref: "Challenge" },
+    Topics: {
+      type: String,
     },
     answeredQuestions: [
       {
@@ -61,8 +67,6 @@ const QuizSessionSchema = new Schema(
   },
   { timestamps: true }
 );
-
-
 
 const QuizSession = mongoose.model("QuizSession", QuizSessionSchema);
 module.exports = QuizSession;

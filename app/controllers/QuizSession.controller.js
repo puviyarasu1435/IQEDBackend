@@ -8,17 +8,17 @@ const mongoose = require("mongoose");
 const UserProgress = require("../models/User/UserProgress.model");
 const Course = require("../models/Career/Course.model");
 const { UpdateProgressfunction } = require("../middleware/CareerUpdate");
+const ChallengeModel = require("../models/Test/Challenge.model");
+
 async function createQuizSession(req, res) {
   try {
-    const { levelid, lessonid, topicId, questionCount } = req.body;
-      
+    const { levelid, lessonid, topicId, questionCount,Challenge=false,ChallengeId=null } = req.body;
+
     // Validate input
     if (!topicId || !questionCount) {
-      return res
-        .status(400)
-        .json({
-          message: "Missing required fields: topicId or questionCount.",
-        });
+      return res.status(400).json({
+        message: "Missing required fields: topicId or questionCount.",
+      });
     }
     const topic = await TopicModel.findById(topicId);
 
@@ -49,9 +49,17 @@ async function createQuizSession(req, res) {
         Topic: topicId,
       },
       questionCount,
+      type:Challenge?"Challenge":"Quiz",
       Topics: topic.name,
     });
-
+    if(Challenge){
+      newSession.Challenge=ChallengeId
+      newSession.careerPath.Topic = topicId
+    }else{
+      newSession.careerPath.Level = levelid
+      newSession.careerPath.Lesson = lessonid
+      newSession.careerPath.Topic = topicId
+    }
     const savedSession = await newSession.save();
 
     // Store session ID in the request session (if applicable)
@@ -115,26 +123,38 @@ async function updateQuizSessionAnswers(req, res) {
     if (answeredQuestions.length >= session.questionCount) {
       session.status = "completed";
     }
-    await UpdateProgressfunction({
-      userId: session.host,
-      careerPathId: "679d3fd96aeede5b160420a6",
-      levelId: session.careerPath.Level,
-      lessonId: session.careerPath.Lesson,
-      topicId: session.careerPath.Topic,
-      score: session.score,
-      LastSessionTime:session.timeTaken,
-      totalquiz:session.questionCount
-    });
+    if (session.type == "Quiz") {
+      await UpdateProgressfunction({
+        userId: session.host,
+        careerPathId: "679d3fd96aeede5b160420a6",
+        levelId: session.careerPath.Level,
+        lessonId: session.careerPath.Lesson,
+        topicId: session.careerPath.Topic,
+        score: session.score,
+        LastSessionTime: session.timeTaken,
+        totalquiz: session.questionCount,
+      });
+    } else if (session.type == "Challenge" && session.Challenge) {
+      if ((session.score / session.questionCount) * 100 > 80) {
+        const Challenge = await ChallengeModel.findById(session.Challenge);
+        Challenge.participantsCount -= 1;
+        if(Challenge.participantsCount<=0){
+          Challenge.Active = false;
+        }
+        Challenge.Winners.push(user._id);
+        user.earnings.iqGems -= Challenge.eligibleGem;
+        Challenge.save();
+        user.save();
+      }
+    }
     await session.save();
 
-    res.status(200).json(session);
+    return res.status(200).json(session);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Error updating session answers",
-        error: error.message || error,
-      });
+    res.status(500).json({
+      message: "Error updating session answers",
+      error: error.message || error,
+    });
   }
 }
 

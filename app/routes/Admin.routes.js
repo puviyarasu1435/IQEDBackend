@@ -7,6 +7,7 @@ const {
   getAllUsers,
 } = require("../controllers/Admin.controller");
 const { bulkCareerPaths } = require("../controllers/Career.controller");
+const { createChallenge, deleteChallenge, getAllChallenges, getAllChallengesByID } = require("../controllers/Challenge.controller");
 const {
   FeedbackGet,
   FeedbackGetById,
@@ -47,6 +48,8 @@ router.delete("/orders/:id", deleteOrder);
 router.post("/bulkCareerPaths", bulkCareerPaths);
 router.post("/UpdateProgress", UpdateProgress);
 
-
-
+router.post("/challengeCreate", createChallenge);
+router.delete("/delete/:challengeId", deleteChallenge);
+router.get("/challenge", getAllChallenges);
+router.get("/challenge/:id", getAllChallengesByID);
 module.exports = router;

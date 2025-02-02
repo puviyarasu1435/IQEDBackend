@@ -3,16 +3,14 @@ const Order = require("../models/Ecart/Order.model"); // Assuming you have the O
 // Create a new order
 const createOrder = async (req, res) => {
   try {
-    const { userId, products, totalAmount, shippingAddress, paymentStatus } =
+    const {Challenge, shippingAddress } =
       req.body;
-
+    const userId =req._id
     // Create a new order instance
     const newOrder = new Order({
       userId,
-      products,
-      totalAmount,
-      shippingAddress,
-      paymentStatus,
+      Challenge,
+      shippingAddress
     });
 
     // Save the new order to the database
@@ -33,23 +31,21 @@ const createOrder = async (req, res) => {
 // Get all orders
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().populate("userId products.productId"); // Populate product details
+    const orders = await Order.find().populate("userId Challenge"); // Populate product details
     const orderDetails = orders.map((order) => {
-      const { _id, userId, shippingAddress, products, orderStatus, createdAt } =
-        order;
-
+      const { _id, userId, shippingAddress, Challenge, orderStatus, createdAt } =order;
       return {
         orderId: _id,
         customerName: userId.name,
         shippingAddress: `${shippingAddress.addressLine}, ${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.postalCode}, ${shippingAddress.country}`,
         orderStatus: orderStatus,
-        productNames: products.map((product) => product.productId.name),
+        productNames: Challenge.map((event) => event.productName),
         OrderPlaced: createdAt,
-        productDetails: products.map((product) => ({
-          productId: product.productId._id,
-          name: product.productId.name,
-          price: product.price,
-          quantity: product.quantity,
+        productDetails: Challenge.map((event) => ({
+          productId: event._id,
+          name: event.productName,
+          price: event.eligibleGem,
+          quantity: 1,
         })),
       };
     });
@@ -67,9 +63,7 @@ const getAllOrders = async (req, res) => {
 
 const getAllUserOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ userId: req._id }).populate(
-      "products.productId"
-    ); // Populate product details
+    const orders = await Order.find({ userId: req._id }).populate("Challenge"); // Populate product details
     return res.status(200).json({
       message: "Orders retrieved successfully",
       orders,
@@ -86,7 +80,7 @@ const getAllUserOrders = async (req, res) => {
 const getOrderById = async (req, res) => {
   try {
     const orderId = req.params.id; // Get the order ID from the route parameters
-    const order = await Order.findById(orderId).populate("products.productId");
+    const order = await Order.findById(orderId).populate("Challenge");
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
