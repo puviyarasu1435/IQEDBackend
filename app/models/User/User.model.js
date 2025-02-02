@@ -83,7 +83,7 @@ const UserSchema = new Schema(
       },
       iqGems: {
         type: Number,
-        default: 10,
+        default: 100,
         min: 0,
       },
       rank: {

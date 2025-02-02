@@ -1,0 +1,1282 @@
+[
+  {
+    "type": "text-text",
+    "question": "Which is the smallest odd number?",
+    "options": [
+      {
+        "type": "text",
+        "content": 0
+      },
+      {
+        "type": "text",
+        "content": 1
+      },
+      {
+        "type": "text",
+        "content": 2
+      },
+      {
+        "type": "text",
+        "content": 0.1
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 1,
+      "index": 1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which is the smallest even number?",
+    "options": [
+      {
+        "type": "text",
+        "content": 1
+      },
+      {
+        "type": "text",
+        "content": 0
+      },
+      {
+        "type": "text",
+        "content": 2
+      },
+      {
+        "type": "text",
+        "content": 4
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 2,
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which is the smallest natural number?",
+    "options": [
+      {
+        "type": "text",
+        "content": 1
+      },
+      {
+        "type": "text",
+        "content": 0
+      },
+      {
+        "type": "text",
+        "content": -1
+      },
+      {
+        "type": "text",
+        "content": -2
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 1,
+      "index": 0,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which is the smallest whole number?",
+    "options": [
+      {
+        "type": "text",
+        "content": 1
+      },
+      {
+        "type": "text",
+        "content": 0
+      },
+      {
+        "type": "text",
+        "content": 2
+      },
+      {
+        "type": "text",
+        "content": -1
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 0,
+      "index": 1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which is the smallest prime number?",
+    "options": [
+      {
+        "type": "text",
+        "content": 1
+      },
+      {
+        "type": "text",
+        "content": 2
+      },
+      {
+        "type": "text",
+        "content": 0
+      },
+      {
+        "type": "text",
+        "content": 3
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 2,
+      "index": 1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which is the smallest composite number?",
+    "options": [
+      {
+        "type": "text",
+        "content": 1
+      },
+      {
+        "type": "text",
+        "content": 2
+      },
+      {
+        "type": "text",
+        "content": 3
+      },
+      {
+        "type": "text",
+        "content": 4
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 4,
+      "index": 3,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "How many factor does a prime number have?",
+    "options": [
+      {
+        "type": "text",
+        "content": 1
+      },
+      {
+        "type": "text",
+        "content": 2
+      },
+      {
+        "type": "text",
+        "content": 3
+      },
+      {
+        "type": "text",
+        "content": 0
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 2,
+      "index": 1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which of the following is an odd number?",
+    "options": [
+      {
+        "type": "text",
+        "content": 14
+      },
+      {
+        "type": "text",
+        "content": 23
+      },
+      {
+        "type": "text",
+        "content": 36
+      },
+      {
+        "type": "text",
+        "content": 40
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 23,
+      "index": 1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "What is the sum of the first two odd numbers (1 + 3)?",
+    "options": [
+      {
+        "type": "text",
+        "content": 3
+      },
+      {
+        "type": "text",
+        "content": 5
+      },
+      {
+        "type": "text",
+        "content": 7
+      },
+      {
+        "type": "text",
+        "content": 4
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 4,
+      "index": 3,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which of these numbers is NOT odd?",
+    "options": [
+      {
+        "type": "text",
+        "content": 11
+      },
+      {
+        "type": "text",
+        "content": 19
+      },
+      {
+        "type": "text",
+        "content": 22
+      },
+      {
+        "type": "text",
+        "content": 37
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 22,
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which of the following is an even number?",
+    "options": [
+      {
+        "type": "text",
+        "content": 15
+      },
+      {
+        "type": "text",
+        "content": 21
+      },
+      {
+        "type": "text",
+        "content": 44
+      },
+      {
+        "type": "text",
+        "content": 37
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 44,
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which number is the largest even number less than 10?",
+    "options": [
+      {
+        "type": "text",
+        "content": 6
+      },
+      {
+        "type": "text",
+        "content": 7
+      },
+      {
+        "type": "text",
+        "content": 8
+      },
+      {
+        "type": "text",
+        "content": 9
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 8,
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "The sum of two even numbers is always:",
+    "options": [
+      {
+        "type": "text",
+        "content": "odd"
+      },
+      {
+        "type": "text",
+        "content": "even"
+      },
+      {
+        "type": "text",
+        "content": "coprime"
+      },
+      {
+        "type": "text",
+        "content": "prime"
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": "even",
+      "index": 1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which of the following is a prime number?",
+    "options": [
+      {
+        "type": "text",
+        "content": 12
+      },
+      {
+        "type": "text",
+        "content": 15
+      },
+      {
+        "type": "text",
+        "content": 19
+      },
+      {
+        "type": "text",
+        "content": 21
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 19,
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "How many factor does a composite number have?",
+    "options": [
+      {
+        "type": "text",
+        "content": 2
+      },
+      {
+        "type": "text",
+        "content": "more than factors"
+      },
+      {
+        "type": "text",
+        "content": "less than 2 factors"
+      },
+      {
+        "type": "text",
+        "content": "exactly two factors"
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": "more than two factors",
+      "index": -1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which of the following numbers is NOT prime?",
+    "options": [
+      {
+        "type": "text",
+        "content": 7
+      },
+      {
+        "type": "text",
+        "content": 9
+      },
+      {
+        "type": "text",
+        "content": 11
+      },
+      {
+        "type": "text",
+        "content": 13
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 9,
+      "index": 1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which number is both even and prime?",
+    "options": [
+      {
+        "type": "text",
+        "content": 2
+      },
+      {
+        "type": "text",
+        "content": 4
+      },
+      {
+        "type": "text",
+        "content": 6
+      },
+      {
+        "type": "text",
+        "content": 8
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": null,
+      "index": -1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "The sum of two prime numbers is always:",
+    "options": [
+      {
+        "type": "text",
+        "content": "odd"
+      },
+      {
+        "type": "text",
+        "content": "prime"
+      },
+      {
+        "type": "text",
+        "content": "even"
+      },
+      {
+        "type": "text",
+        "content": "composite"
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": "composite",
+      "index": 3,
+      "explanation": "The only exception is when one of the prime numbers is 2"
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which of the following is a natural number?",
+    "options": [
+      {
+        "type": "text",
+        "content": -1
+      },
+      {
+        "type": "text",
+        "content": 0
+      },
+      {
+        "type": "text",
+        "content": 1
+      },
+      {
+        "type": "text",
+        "content": -3
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 1,
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "The set of natural numbers includes:",
+    "options": [
+      {
+        "type": "text",
+        "content": " All positive integer"
+      },
+      {
+        "type": "text",
+        "content": "All negative integers"
+      },
+      {
+        "type": "text",
+        "content": " All fractions"
+      },
+      {
+        "type": "text",
+        "content": "All decimals"
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": "All postive integer",
+      "index": -1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "What is the sum of the first two natural numbers?",
+    "options": [
+      {
+        "type": "text",
+        "content": 0
+      },
+      {
+        "type": "text",
+        "content": 1
+      },
+      {
+        "type": "text",
+        "content": 3
+      },
+      {
+        "type": "text",
+        "content": 4
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 3,
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which of the following is a whole number?",
+    "options": [
+      {
+        "type": "text",
+        "content": -2
+      },
+      {
+        "type": "text",
+        "content": 0
+      },
+      {
+        "type": "text",
+        "content": -3
+      },
+      {
+        "type": "text",
+        "content": -5
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 0,
+      "index": 1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "The set of whole numbers includes:",
+    "options": [
+      {
+        "type": "text",
+        "content": " All positive integer and zero"
+      },
+      {
+        "type": "text",
+        "content": "All negative integers"
+      },
+      {
+        "type": "text",
+        "content": " All fractions"
+      },
+      {
+        "type": "text",
+        "content": "All decimals"
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": "All postive integer and zero",
+      "index": -1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "If you add zero to any whole number, the result is:",
+    "options": [
+      {
+        "type": "text",
+        "content": 0
+      },
+      {
+        "type": "text",
+        "content": 1
+      },
+      {
+        "type": "text",
+        "content": "same number"
+      },
+      {
+        "type": "text",
+        "content": "a negative number"
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": "same number",
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "The predecessor of the smallest natural number is",
+    "options": [
+      {
+        "type": "text",
+        "content": 1
+      },
+      {
+        "type": "text",
+        "content": 0
+      },
+      {
+        "type": "text",
+        "content": "not defined"
+      },
+      {
+        "type": "text",
+        "content": "a negative number"
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": "not defined",
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which of the following is a prime number? ",
+    "options": [
+      {
+        "type": "text",
+        "content": 12
+      },
+      {
+        "type": "text",
+        "content": 14
+      },
+      {
+        "type": "text",
+        "content": 15
+      },
+      {
+        "type": "text",
+        "content": 17
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 17,
+      "index": 3,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which is the prime number nearest to 100.",
+    "options": [
+      {
+        "type": "text",
+        "content": 95
+      },
+      {
+        "type": "text",
+        "content": 96
+      },
+      {
+        "type": "text",
+        "content": 97
+      },
+      {
+        "type": "text",
+        "content": 98
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 97,
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "The sum of 320 and 425 gives a ___ number",
+    "options": [
+      {
+        "type": "text",
+        "content": "prime number"
+      },
+      {
+        "type": "text",
+        "content": "composite number"
+      },
+      {
+        "type": "text",
+        "content": "whole number"
+      },
+      {
+        "type": "text",
+        "content": "negative number"
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": "composite number",
+      "index": 1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which of the following numbers is composite with exactly three factors?",
+    "options": [
+      {
+        "type": "text",
+        "content": 6
+      },
+      {
+        "type": "text",
+        "content": 8
+      },
+      {
+        "type": "text",
+        "content": 9
+      },
+      {
+        "type": "text",
+        "content": 10
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 9,
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which of the following is true about the difference between two whole numbers?",
+    "options": [
+      {
+        "type": "text",
+        "content": "It is always positive"
+      },
+      {
+        "type": "text",
+        "content": "It is always zero"
+      },
+      {
+        "type": "text",
+        "content": "It is always a whole number"
+      },
+      {
+        "type": "text",
+        "content": "It is always negative"
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": "It is always a whole number",
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "How many factors does 21 have?",
+    "options": [
+      {
+        "type": "text",
+        "content": 3
+      },
+      {
+        "type": "text",
+        "content": 4
+      },
+      {
+        "type": "text",
+        "content": 5
+      },
+      {
+        "type": "text",
+        "content": 2
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 4,
+      "index": 1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Which is the largest two digit natural number?",
+    "options": [
+      {
+        "type": "text",
+        "content": 98
+      },
+      {
+        "type": "text",
+        "content": 97
+      },
+      {
+        "type": "text",
+        "content": 99
+      },
+      {
+        "type": "text",
+        "content": 100
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 99,
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "When two odd numbers get multiplied then we get",
+    "options": [
+      {
+        "type": "text",
+        "content": "even"
+      },
+      {
+        "type": "text",
+        "content": "prime"
+      },
+      {
+        "type": "text",
+        "content": "odd"
+      },
+      {
+        "type": "text",
+        "content": "composite"
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": "odd",
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Counting numbers are called ________.",
+    "options": [
+      {
+        "type": "text",
+        "content": "integer"
+      },
+      {
+        "type": "text",
+        "content": "natural numbers"
+      },
+      {
+        "type": "text",
+        "content": "whole numbers"
+      },
+      {
+        "type": "text",
+        "content": "none of these"
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": "natural numbers",
+      "index": 1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Write the successor of 1996?",
+    "options": [
+      {
+        "type": "text",
+        "content": 1999
+      },
+      {
+        "type": "text",
+        "content": 1996
+      },
+      {
+        "type": "text",
+        "content": 1997
+      },
+      {
+        "type": "text",
+        "content": 1995
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 1997,
+      "index": 2,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "Largest number formed by digits 2, 4, 0, 3, 6, 9 is",
+    "options": [
+      {
+        "type": "text",
+        "content": 240369
+      },
+      {
+        "type": "text",
+        "content": 964320
+      },
+      {
+        "type": "text",
+        "content": 946320
+      },
+      {
+        "type": "text",
+        "content": 936240
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 964320,
+      "index": 1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "________ has no predecessor in the whole number system.",
+    "options": [
+      {
+        "type": "text",
+        "content": 0
+      },
+      {
+        "type": "text",
+        "content": 1
+      },
+      {
+        "type": "text",
+        "content": -1
+      },
+      {
+        "type": "text",
+        "content": 2
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 0,
+      "index": 0,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": "________ has no predecessor in the natural number system.",
+    "options": [
+      {
+        "type": "text",
+        "content": 0
+      },
+      {
+        "type": "text",
+        "content": 1
+      },
+      {
+        "type": "text",
+        "content": -1
+      },
+      {
+        "type": "text",
+        "content": 2
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": 1,
+      "index": 1,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": null,
+    "options": [
+      {
+        "type": "text",
+        "content": null
+      },
+      {
+        "type": "text",
+        "content": null
+      },
+      {
+        "type": "text",
+        "content": null
+      },
+      {
+        "type": "text",
+        "content": null
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": null,
+      "index": 0,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  },
+  {
+    "type": "text-text",
+    "question": null,
+    "options": [
+      {
+        "type": "text",
+        "content": null
+      },
+      {
+        "type": "text",
+        "content": null
+      },
+      {
+        "type": "text",
+        "content": null
+      },
+      {
+        "type": "text",
+        "content": null
+      }
+    ],
+    "correctAnswer": {
+      "type": "text",
+      "content": null,
+      "index": 0,
+      "explanation": ""
+    },
+    "difficulty": "easy",
+    "topics": [
+      "678b9dc939053772c9f9303b"
+    ]
+  }
+]

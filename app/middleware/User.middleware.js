@@ -14,6 +14,9 @@ async function CheckEarnings(req, res, next) {
   if (lastUpdateDate == null || lastUpdateDate != today.toDateString()) {
     user.earnings.streak.count += 1;
     user.earnings.streak.lastUpdate = today;
+  }else{
+    user.earnings.streak.count = 0;
+    user.earnings.streak.lastUpdate = today.toDateString();
   }
   if(position!=null || position>-1){
       user.earnings.rank = position+1;

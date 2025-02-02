@@ -1,3 +1,4 @@
+const Order = require("../models/Ecart/Order.model");
 const ChallengeModel = require("../models/Test/Challenge.model");
 
 // Create a new challenge
@@ -24,13 +25,29 @@ const getAllChallenges = async (req, res) => {
 const getAllChallengesByID = async (req, res) => {
   try {
     const Id = req.params.id;
-    console.log(Id)
+    console.log(Id);
     const challenges = await ChallengeModel.findById(Id);
     res.status(200).json({ success: true, challenges });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+const CheckUserOrder = async (req, res) => {
+    try {
+      const CId = req.params.id;
+      const Id = req._id;
+      const OrderData = await Order.find({ Challenge: CId, userId: Id });
+  
+      if (OrderData.length > 0) { // Check if any order exists
+        res.status(200).send(true);
+      } else {
+        res.status(200).send(false);
+      }
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  };
+  
 // Update challenge: decrease participantsCount and add a winner
 const updateChallenge = async (req, res) => {
   try {
@@ -92,5 +109,6 @@ module.exports = {
   updateChallenge,
   createChallenge,
   getAllChallenges,
-  getAllChallengesByID
+  getAllChallengesByID,
+  CheckUserOrder,
 };

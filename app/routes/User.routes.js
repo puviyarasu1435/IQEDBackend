@@ -1,5 +1,5 @@
 const { GetCareerpathById } = require("../controllers/Career.controller");
-const { updateChallenge, getAllChallenges, getAllChallengesByID } = require("../controllers/Challenge.controller");
+const { updateChallenge, getAllChallenges, getAllChallengesByID, CheckUserOrder } = require("../controllers/Challenge.controller");
 const { FeedbackPost, FeedbackGet, FeedbackGetById } = require("../controllers/Feedback.controller");
 const { getOrderById, createOrder, getAllUserOrders } = require("../controllers/Order.controller");
 const { getAllProducts, getProductById } = require("../controllers/Product.controller");
@@ -31,5 +31,6 @@ router.get("/Careerpath", GetCareerpathById);
 router.put("/challengeUpdate", updateChallenge);
 router.get("/challenge", getAllChallenges);
 router.get("/challenge/:id", getAllChallengesByID);
+router.get("/CheckUserOrder/:id", CheckUserOrder);
 
 module.exports = router;

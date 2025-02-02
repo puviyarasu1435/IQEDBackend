@@ -2,14 +2,18 @@ const { QuestionModel } = require("../models");
 
 async function postQuestions(req, res) {
   try {
-    const newQuestion = new QuestionModel(req.body);
-    const savedQuestion = await newQuestion.save();
+    if (!Array.isArray(req.body) || req.body.length === 0) {
+      return res.status(400).json({ message: "Invalid input. Expecting an array of questions." });
+    }
+
+    const savedQuestions = await QuestionModel.insertMany(req.body);
+    
     return res.status(200).json({
-      message: "Question post successfully!",
-      data: savedQuestion,
+      message: "Questions posted successfully!",
+      data: savedQuestions,
     });
   } catch (error) {
-    console.error("Error during authentication:", error);
+    console.error("Error while posting questions:", error);
     return res.status(500).send("An error occurred. Please try again.");
   }
 }
