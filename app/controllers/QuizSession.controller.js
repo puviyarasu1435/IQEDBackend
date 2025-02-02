@@ -12,7 +12,7 @@ const ChallengeModel = require("../models/Test/Challenge.model");
 
 async function createQuizSession(req, res) {
   try {
-    const { levelid, lessonid, topicId, questionCount,Challenge=false,ChallengeId=null } = req.body;
+    const { levelid, lessonid, topicId, questionCount,Type="false",ChallengeId=null } = req.body;
 
     // Validate input
     if (!topicId || !questionCount) {
@@ -49,13 +49,14 @@ async function createQuizSession(req, res) {
         Topic: topicId,
       },
       questionCount,
-      type:Challenge?"Challenge":"Quiz",
+      type:Type,
       Topics: topic.name,
     });
-    if(Challenge){
+
+    if(Type=="Challenge"){
       newSession.Challenge=ChallengeId
       newSession.careerPath.Topic = topicId
-    }else{
+    }else if(Type=="Quiz"){
       newSession.careerPath.Level = levelid
       newSession.careerPath.Lesson = lessonid
       newSession.careerPath.Topic = topicId
@@ -73,6 +74,9 @@ async function createQuizSession(req, res) {
     return res.status(500).json({ message: "Error creating session.", error });
   }
 }
+
+
+
 async function getQuizSession(req, res) {
   try {
     const { sessionId } = req.body;

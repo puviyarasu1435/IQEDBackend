@@ -15,7 +15,7 @@ const QuizSessionSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ["Quiz", "Challenge"],
+      enum: ["Quiz", "Challenge","LevelTest"],
       default: "Quiz",
     },
     questionsList: [
