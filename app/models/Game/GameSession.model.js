@@ -13,7 +13,7 @@ const GameSessionSchema = new Schema(
       enum: ["pending", "completed"],
       default: "pending",
     },
-    RoomId:{
+    RoomId: {
       type: String,
       required: true,
     },
@@ -79,7 +79,11 @@ const GameSessionSchema = new Schema(
       default: -1,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: {
+      currentTime: () => new Date(new Date().getTime() + 5.5 * 60 * 60 * 1000),
+    },
+  }
 );
 
 const GameSession = mongoose.model("GameSession", GameSessionSchema);

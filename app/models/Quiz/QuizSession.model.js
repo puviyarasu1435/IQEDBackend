@@ -65,7 +65,11 @@ const QuizSessionSchema = new Schema(
       default: 0,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: {
+      currentTime: () => new Date(new Date().getTime() + 5.5 * 60 * 60 * 1000),
+    },
+  }
 );
 
 const QuizSession = mongoose.model("QuizSession", QuizSessionSchema);

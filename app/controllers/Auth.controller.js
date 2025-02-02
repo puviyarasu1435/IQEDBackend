@@ -143,8 +143,6 @@ async function UserSignIn(req, res) {
 
     const token = jwt_GetToken({ _id: user._id });
 
-    req.session.Token = token;
-
     return res
       .status(200)
       .json({ message: "Authentication successful", token });

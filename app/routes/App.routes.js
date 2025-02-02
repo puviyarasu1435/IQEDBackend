@@ -6,11 +6,10 @@ router.get("/", (req, res) => {
   res.send("Server is Online V2");
 });
 router.get("/test", (req, res) => {
-  req.session.User = jwt_GetToken({test:"ffff"});
-  res.send(req.session.User);
+  res.send(jwt_GetToken({ test: "ffff" }));
 });
 router.get("/test1", (req, res) => {
-  res.send(req.session.User);
+  res.send("d");
 });
 
 module.exports = router;

@@ -19,7 +19,7 @@ const IQSessionSchema = new Schema(
     },
     UserLevel: {
       type: String,
-      enum: ["children", "adolescents","adults"],
+      enum: ["children", "adolescents", "adults"],
       required: true,
     },
     questionsList: [
@@ -64,7 +64,11 @@ const IQSessionSchema = new Schema(
       default: 0,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: {
+      currentTime: () => new Date(new Date().getTime() + 5.5 * 60 * 60 * 1000),
+    },
+  }
 );
 
 const IQSession = mongoose.model("IQSession", IQSessionSchema);

@@ -63,7 +63,6 @@ async function createQuizSession(req, res) {
     const savedSession = await newSession.save();
 
     // Store session ID in the request session (if applicable)
-    req.session.QuizToken = savedSession._id;
 
     return res.status(201).json({
       message: "Session created successfully.",
