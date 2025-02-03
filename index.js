@@ -17,7 +17,7 @@ const {
 const { jwt_isVerify } = require("./app/config/jwt.config");
 const { CheckEarnings } = require("./app/middleware/User.middleware");
 
-// const SocketConnection = require("./app/scokets/socket");
+const SocketConnection = require("./app/scokets/socket");
 
 // Routers
 const AppRoute = require("./app/routes/App.routes");
@@ -72,7 +72,7 @@ app.use("/IQ", IQRoute);
 app.use("/admin", AdminRoute);
 
 //sockets
-// SocketConnection(server)
+SocketConnection(server)
 
 main().catch((err) => console.error(err));
 
