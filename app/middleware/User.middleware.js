@@ -22,7 +22,7 @@ async function CheckEarnings(req, res, next) {
   const lastUpdate = new Date(user.earnings.streak.lastUpdate);
 
   const dayDifference = getDayDifference(istNow, lastUpdate); // Difference in calendar days (IST)
-  console.log(istNow, lastUpdate, dayDifference);
+  // console.log(istNow, lastUpdate, dayDifference);
   if (dayDifference === 1) {
     // Logged in on the next IST calendar day → Increase streak
     user.earnings.streak.count += 1;

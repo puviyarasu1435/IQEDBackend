@@ -10,7 +10,7 @@ const main = async () => {
       // Proceed only if the operation is an update
       if (change.operationType === "update") {
         const userId = change.documentKey._id;
-        console.log("Update detected for user:", userId);
+        // console.log("Update detected for user:", userId);
 
         // Check if the updated fields are present and include earnings
         if (
@@ -21,7 +21,7 @@ const main = async () => {
           )
         ) {
           const updatedFields = change.updateDescription.updatedFields;
-          console.log("Updated fields:", updatedFields);
+          // console.log("Updated fields:", updatedFields);
           const User = await UserModel.findOne({ _id: userId });
           ValueBaseCriteria(User, updatedFields);
           // Handle specific fields within earnings
@@ -120,7 +120,7 @@ module.exports = { main };
 
 const ValueBaseCriteria = async (user, updatedFields) => {
   const { Quest, progress, isCompleted } = user.valueBaseQuest;
-  console.log(Quest);
+  // console.log(Quest);
   if (!isCompleted) {
     const currentQuest = await QuestModel.findById(Quest);
     let { currentValue, targetValue, comparisonOperator } = currentQuest.params;
@@ -153,7 +153,7 @@ const ValueBaseCriteria = async (user, updatedFields) => {
       } else {
         user.valueBaseQuest.progress = 100;
       }
-      console.log(CheckComplted, comparisonOperator, CValue, targetValue);
+      // console.log(CheckComplted, comparisonOperator, CValue, targetValue);
       if (CheckComplted) {
         user.valueBaseQuest.isCompleted = true;
         switch (currentQuest.reward.type) {
