@@ -123,14 +123,13 @@ const ValueBaseCriteria = async (user, updatedFields) => {
   console.log(Quest);
   if (!isCompleted) {
     const currentQuest = await QuestModel.findById(Quest);
-    let { currentValue, targetValue, comparisonOperator } =
-      currentQuest.params;
-    if(currentValue=="streak"){
-      currentValue+="count"
+    let { currentValue, targetValue, comparisonOperator } = currentQuest.params;
+    if (currentValue == "streak") {
+      currentValue += "count";
     }
     if (updatedFields["earnings." + currentValue] !== undefined) {
       let CheckComplted = false; //
-      
+
       let CValue = updatedFields["earnings." + currentValue];
       switch (comparisonOperator) {
         case "==":
@@ -162,7 +161,7 @@ const ValueBaseCriteria = async (user, updatedFields) => {
             user.earnings.xp += currentQuest.reward.value;
             console.log("User rewarded with 100 XP!");
             break;
-      
+
           case "Gems":
             user.earnings.iqGems += currentQuest.reward.value;
             console.log("User rewarded with 50 gems!");
@@ -171,8 +170,14 @@ const ValueBaseCriteria = async (user, updatedFields) => {
           default:
             console.error(`Unknown reward callback: ${reward}`);
         }
-        user.AchivedQuest.push(currentQuest._id)
-        user.valueBaseQuest ={Quest:"674d0bf0a90dacf8663904aa",progress:user.earnings.streak.count,isCompleted:false}
+        if (user.AchivedQuest[0] != currentQuest._id) {
+          user.AchivedQuest.push(currentQuest._id);
+        }
+        user.valueBaseQuest = {
+          Quest: "674d0bf0a90dacf8663904aa",
+          progress: user.earnings.streak.count,
+          isCompleted: false,
+        };
       }
       user.save();
     }
@@ -180,6 +185,5 @@ const ValueBaseCriteria = async (user, updatedFields) => {
 };
 
 const triggerReward = (user, reward) => {
-
   return user;
 };
