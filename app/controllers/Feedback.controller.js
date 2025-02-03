@@ -3,8 +3,6 @@ const { PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 const S3 = require("../config/aws.config");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
-
-
 const BUCKET_NAME = process.env.S3_BUCKET_NAME;
 
 // Upload images to S3 and return only the file keys
@@ -47,19 +45,41 @@ async function generateSignedUrls(imageKeys) {
 // POST Feedback
 async function FeedbackPost(req, res) {
   try {
-    const { type, feedback } = req.body;
+    const {
+      type,
+      feedback,
+      topic,
+      question,
+      options,
+      correctOption,
+      explanation,
+    } = req.body;
     let imageList = [];
 
     if (type === "bug" && req.files) {
       imageList = await uploadImagesToS3(req.files); // Store only file keys
     }
-
-    const feedbackData = {
-      userId:req._id,
-      type,
-      feedback,
-      imageList, // Store file keys, not URLs
-    };
+    let feedbackData = {};
+    if (type === "suggestQuestions") {
+      feedbackData = {
+        userId: req._id,
+        type,
+        suggestQuestions: {
+          topic,
+          question,
+          options,
+          correctOption,
+          explanation,
+        },
+      };
+    } else {
+      feedbackData = {
+        userId: req._id,
+        type,
+        feedback,
+        imageList, // Store file keys, not URLs
+      };
+    }
 
     const newFeedback = new FeedbackModel(feedbackData);
     await newFeedback.save();
@@ -76,7 +96,10 @@ async function FeedbackPost(req, res) {
 // GET all Feedback
 async function FeedbackGet(req, res) {
   try {
-    const feedbacks = await FeedbackModel.find().populate("userId", "name email");
+    const feedbacks = await FeedbackModel.find().populate(
+      "userId",
+      "name email"
+    );
 
     // Convert stored file keys to signed URLs
     const feedbacksWithUrls = await Promise.all(
@@ -96,8 +119,12 @@ async function FeedbackGet(req, res) {
 // GET Feedback by ID
 async function FeedbackGetById(req, res) {
   try {
-    let feedback = await FeedbackModel.findById(req.params.id).populate("userId", "name email");
-    if (!feedback) return res.status(404).json({ message: "Feedback not found" });
+    let feedback = await FeedbackModel.findById(req.params.id).populate(
+      "userId",
+      "name email"
+    );
+    if (!feedback)
+      return res.status(404).json({ message: "Feedback not found" });
 
     feedback = feedback.toObject();
     feedback.imageList = await generateSignedUrls(feedback.imageList); // Convert file keys to URLs
@@ -110,7 +137,8 @@ async function FeedbackGetById(req, res) {
 
 // Routes
 
-
 module.exports = {
-    FeedbackGetById,FeedbackGet,FeedbackPost
+  FeedbackGetById,
+  FeedbackGet,
+  FeedbackPost,
 };

@@ -17,7 +17,7 @@ router.get("/leaderboard",getleaderboard)
 // UPDATE
 router.put("/xp",putXP)
 router.put("/iqgem",putGem)
-router.put("/update",UpdateUser)
+router.post("/update",upload.single('file'),UpdateUser)
 
 
 router.post("/feedback", upload.array("images"), FeedbackPost);

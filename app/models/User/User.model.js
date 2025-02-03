@@ -73,7 +73,7 @@ const UserSchema = new Schema(
       streak: {
         count: {
           type: Number,
-          default: 1,
+          default: 0,
           min: 0,
         },
         lastUpdate: {
@@ -83,7 +83,7 @@ const UserSchema = new Schema(
       },
       iqGems: {
         type: Number,
-        default: 100,
+        default: 10,
         min: 0,
       },
       rank: {
@@ -93,7 +93,7 @@ const UserSchema = new Schema(
       },
       xp: {
         type: Number,
-        default: 10,
+        default: 100,
         min: 0,
       },
     },
