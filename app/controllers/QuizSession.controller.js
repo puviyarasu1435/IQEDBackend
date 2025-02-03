@@ -12,7 +12,14 @@ const ChallengeModel = require("../models/Test/Challenge.model");
 
 async function createQuizSession(req, res) {
   try {
-    const { levelid, lessonid, topicId, questionCount,Type="false",ChallengeId=null } = req.body;
+    const {
+      levelid,
+      lessonid,
+      topicId,
+      questionCount,
+      Type = "Quiz",
+      ChallengeId = null,
+    } = req.body;
 
     // Validate input
     if (!topicId || !questionCount) {
@@ -27,17 +34,36 @@ async function createQuizSession(req, res) {
         .status(400)
         .json({ message: "questionCount must be a positive integer." });
     }
+    let questionsList = [];
+    
+    if (Type == "LevelTest") {
+      const TopicDistribution = [];
 
+      if (!Array.isArray(TopicDistribution) || TopicDistribution.length === 0) {
+        return res.status(400).json({ error: "No topics provided" });
+      }
+
+      questionsList = await QuestionModel.aggregate([
+        { $match: { topics: { $in: TopicDistribution } } },
+        { $sample: { size: questionCount } },
+      ]);
+    } else {
+      questionsList = await QuestionModel.aggregate([
+        { $match: { topics: topic._id } },
+        { $sample: { size: questionCount } },
+      ]);
+    }
     // Fetch random questions
-    const questionsList = await QuestionModel.aggregate([
-      { $match: { topics: topic._id } }, // Match topic ID
-      { $sample: { size: questionCount } }, // Randomly sample questions
-    ]);
 
     if (questionsList.length === 0) {
       return res
         .status(404)
         .json({ message: "No questions found for this topic." });
+    }
+    if (questionsList.length < questionCount) {
+      return res.status(400).json({
+        error: "Not enough questions available for the selected topics",
+      });
     }
     // Create a new quiz session
     const newSession = new QuizSessionModel({
@@ -49,17 +75,17 @@ async function createQuizSession(req, res) {
         Topic: topicId,
       },
       questionCount,
-      type:Type,
+      type: Type,
       Topics: topic.name,
     });
 
-    if(Type=="Challenge"){
-      newSession.Challenge=ChallengeId
-      newSession.careerPath.Topic = topicId
-    }else if(Type=="Quiz"){
-      newSession.careerPath.Level = levelid
-      newSession.careerPath.Lesson = lessonid
-      newSession.careerPath.Topic = topicId
+    if (Type == "Challenge") {
+      newSession.Challenge = ChallengeId;
+      newSession.careerPath.Topic = topicId;
+    } else if (Type == "Quiz") {
+      newSession.careerPath.Level = levelid;
+      newSession.careerPath.Lesson = lessonid;
+      newSession.careerPath.Topic = topicId;
     }
     const savedSession = await newSession.save();
 
@@ -74,8 +100,6 @@ async function createQuizSession(req, res) {
     return res.status(500).json({ message: "Error creating session.", error });
   }
 }
-
-
 
 async function getQuizSession(req, res) {
   try {
@@ -141,7 +165,7 @@ async function updateQuizSessionAnswers(req, res) {
       if ((session.score / session.questionCount) * 100 > 80) {
         const Challenge = await ChallengeModel.findById(session.Challenge);
         Challenge.participantsCount -= 1;
-        if(Challenge.participantsCount<=0){
+        if (Challenge.participantsCount <= 0) {
           Challenge.Active = false;
         }
         Challenge.Winners.push(user._id);

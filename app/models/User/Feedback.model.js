@@ -9,7 +9,7 @@ const FeedbackSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ["bug", "general","Question"],
+    enum: ["bug", "general","suggestQuestions"],
   },
   imageList: [
     {
