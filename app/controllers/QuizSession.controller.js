@@ -109,7 +109,7 @@ async function getQuizSession(req, res) {
     }
 
     const session = await QuizSessionModel.findById(sessionId)
-      .populate("questionsList")
+      .populate("questionsList").populate("Challenge")
       .exec();
 
     if (!session) {
