@@ -4,12 +4,17 @@ const { UserModel } = require("../models");
 const MailTransporter = require("../config/mailer.config");
 const UserProgress = require("../models/User/UserProgress.model");
 const { CareerPath, Lesson, Level } = require("../models/Test/careerpath");
+const OTPModel = require("../models/User/OTP.Session");
 
 const EmailOTP = {};
 
 function Generate_OTP(Email) {
   let OTP = Math.floor(Math.random() * (1000000 - 99999)) + 99999;
-  EmailOTP[Email] = OTP;
+  const newOtp = new OTPModel({
+    email:Email,
+    otp:OTP
+  })
+  newOtp.save()
   return OTP;
 }
 
@@ -190,7 +195,8 @@ async function verifyEmailOTP(req, res) {
     if (!email || !otp) {
       return res.status(400).json({ message: "Email and OTP are required." });
     }
-    if (EmailOTP[email] === Number(otp)) {
+    const otps = await OTPModel.findOne({ email }).sort({ createdAt: -1 });
+    if (otps.otp === Number(otp)) {
       return res
         .status(200)
         .json({ message: "Verfy OTP successfuly", isVeridy: true });
