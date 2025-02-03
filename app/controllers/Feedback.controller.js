@@ -72,12 +72,12 @@ async function FeedbackPost(req, res) {
           explanation,
         },
       };
-    } else {
+    } 
+    if (type === "general") {
       feedbackData = {
         userId: req._id,
         type,
-        feedback,
-        imageList, // Store file keys, not URLs
+        feedback
       };
     }
 
