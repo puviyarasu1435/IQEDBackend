@@ -21,7 +21,6 @@ const FeedbackSchema = new mongoose.Schema({
   },
   suggestQuestions: {
     type: mongoose.Schema.Types.Mixed,
-    required: true,
   },
 });
 
