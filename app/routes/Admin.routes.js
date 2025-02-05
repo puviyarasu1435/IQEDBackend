@@ -20,7 +20,10 @@ const {
   createProduct,
   getAllProducts,
 } = require("../controllers/Product.controller");
+const { GenerateQuestions } = require("../controllers/Test/QuestionsCreater");
 const { UpdateProgress } = require("../middleware/CareerUpdate");
+
+
 
 const router = require("express").Router();
 
@@ -52,4 +55,9 @@ router.post("/challengeCreate", createChallenge);
 router.delete("/delete/:challengeId", deleteChallenge);
 router.get("/challenge", getAllChallenges);
 router.get("/challenge/:id", getAllChallengesByID);
+
+
+router.post("/generatequestions", GenerateQuestions);
+
+
 module.exports = router;
