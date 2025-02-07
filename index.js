@@ -31,11 +31,13 @@ const AdminRoute = require("./app/routes/Admin.routes");
 
 const { main } = require("./app/Stream/User.Stream");
 
+
 // app.use(cors({
 //   origin: 'https://iqed-iq.vercel.app', // Replace with your frontend's URL
 //   methods: 'GET,POST,OPTIONS',
 //   allowedHeaders: 'Content-Type,Authorization'
 // }));
+
 
 
 // const corsOptions = {
@@ -46,6 +48,8 @@ const { main } = require("./app/Stream/User.Stream");
 //   preflightContinue: false,
 // };
 
+
+
 // app.use(cors(corsOptions));
 app.use(cors({
   origin: ["https://iqed-platform.vercel.app","http://localhost:5173","http://localhost:8000"], 
@@ -53,9 +57,9 @@ app.use(cors({
   credentials: true,
 }));
 
+
 app.use(express.json({limit: '50mb'}));
 // app.use(sessionMiddleware);
-
 
 
 // Environment variables
@@ -71,10 +75,13 @@ app.use("/game", GameRoute);
 app.use("/IQ", IQRoute);
 app.use("/admin", AdminRoute);
 
+
 //sockets
 SocketConnection(server)
 
+
 main().catch((err) => console.error(err));
+
 
 // Start the server
 server.listen(PORT, () => {
