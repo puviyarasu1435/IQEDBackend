@@ -91,14 +91,16 @@ async function UserSignUp(req, res) {
       for (const lesson of level.lessons) {
         const newLessonProgress = {
           lesson: lesson._id,
-          completed: false,
+          unlocked: lesson._id == "679d3fd96aeede5b160420a8"? true : false,
+          completed: lesson._id == "679d3fd96aeede5b160420a8"? true : false,
           topicProgress: [],
         };
 
         for (const topic of lesson.topics) {
           newLessonProgress.topicProgress.push({
             topic: topic._id,
-            completed: false,
+            unlocked: lesson._id == "679d3fd96aeede5b160420a8"? true : false,
+            completed: lesson._id == "679d3fd96aeede5b160420a8"? true : false,
             score: 0,
           });
         }
