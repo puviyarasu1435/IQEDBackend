@@ -6,6 +6,8 @@ const {
   getUsersCreatedLastWeek,
   getAllUsers,
   deleteUsers,
+  UpdateUser,
+  deleteFeedback,
 } = require("../controllers/Admin.controller");
 const { bulkCareerPaths } = require("../controllers/Career.controller");
 const { createChallenge, deleteChallenge, getAllChallenges, getAllChallengesByID } = require("../controllers/Challenge.controller");
@@ -24,7 +26,9 @@ const {
 const { GenerateQuestions } = require("../controllers/Test/QuestionsCreater");
 const { UpdateProgress } = require("../middleware/CareerUpdate");
 
-
+const multer  = require('multer');
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 
 const router = require("express").Router();
 
@@ -34,8 +38,10 @@ router.get("/users/created-this-week", getUsersCreatedThisWeek);
 router.get("/users/created-last-week", getUsersCreatedLastWeek);
 router.get("/users/all", getAllUsers);
 router.post("/users/delete", deleteUsers);
+router.post("/users/update",upload.single('file'), UpdateUser);
 
 router.get("/feedback", FeedbackGet);
+router.post("/dlefeedback", deleteFeedback);
 router.get("/feedback/:id", FeedbackGetById);
 
 router.post("/products", createProduct);
