@@ -82,6 +82,26 @@ async function getAllUsers(req, res) {
   }
 }
 
+// Delete multiple users by _id
+async function deleteUsers(req, res) {
+  try {
+    const { userIds } = req.body; // Expecting an array of user _id's
+    console.log("Id",userIds)
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+      return res.status(400).json({ error: "Invalid user IDs" });
+    }
+
+    const result = await UserModel.deleteMany({ _id: { $in: userIds } });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "No users found to delete" });
+    }
+
+    res.json({ message: "Users deleted successfully", deletedCount: result.deletedCount });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
 
-module.exports = {getActiveUsersLast30Days,getTotalUsers,getUsersCreatedThisWeek,getUsersCreatedLastWeek,getAllUsers};
+module.exports = {getActiveUsersLast30Days,getTotalUsers,getUsersCreatedThisWeek,getUsersCreatedLastWeek,getAllUsers,deleteUsers};

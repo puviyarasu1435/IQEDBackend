@@ -44,6 +44,7 @@ userProgressSchema.pre("save", function (next) {
 });
 
 userProgressSchema.methods.updateProgress = async function () {
+  
   for (let i = 0; i < this.levelProgress.length; i++) {
     const level = this.levelProgress[i];
     if (!level.unlocked) break; // Stop if level is locked

@@ -5,6 +5,7 @@ const {
   getUsersCreatedThisWeek,
   getUsersCreatedLastWeek,
   getAllUsers,
+  deleteUsers,
 } = require("../controllers/Admin.controller");
 const { bulkCareerPaths } = require("../controllers/Career.controller");
 const { createChallenge, deleteChallenge, getAllChallenges, getAllChallengesByID } = require("../controllers/Challenge.controller");
@@ -32,6 +33,7 @@ router.get("/users/total", getTotalUsers);
 router.get("/users/created-this-week", getUsersCreatedThisWeek);
 router.get("/users/created-last-week", getUsersCreatedLastWeek);
 router.get("/users/all", getAllUsers);
+router.post("/users/delete", deleteUsers);
 
 router.get("/feedback", FeedbackGet);
 router.get("/feedback/:id", FeedbackGetById);
