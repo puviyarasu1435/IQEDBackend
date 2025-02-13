@@ -23,6 +23,7 @@ const {
   createProduct,
   getAllProducts,
 } = require("../controllers/Product.controller");
+const { getAllQuestions, deleteQuestions } = require("../controllers/Question.controller");
 const { GenerateQuestions } = require("../controllers/Test/QuestionsCreater");
 const { getAllTopics } = require("../controllers/Topic.controller");
 const { UpdateProgress } = require("../middleware/CareerUpdate");
@@ -40,6 +41,10 @@ router.get("/users/created-last-week", getUsersCreatedLastWeek);
 router.get("/users/all", getAllUsers);
 router.post("/users/delete", deleteUsers);
 router.post("/users/update",upload.single('file'), UpdateUser);
+
+
+router.get("/question", getAllQuestions);
+router.post("/question/delete", deleteQuestions);
 
 router.get("/feedback", FeedbackGet);
 router.post("/dlefeedback", deleteFeedback);

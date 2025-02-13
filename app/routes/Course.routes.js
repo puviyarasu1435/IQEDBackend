@@ -19,7 +19,8 @@ const {
 
 const router = require("express").Router();
 router.get("/question:id", getQuestions);
-router.get("/question", deleteQuestions);
+router.get("/question/delete", deleteQuestions);
+router.get("/question", getAllQuestions);
 router.post("/question", postQuestions);
 router.put("/question:id", putQuestions);
 router.delete("/question:id", deleteQuestions);

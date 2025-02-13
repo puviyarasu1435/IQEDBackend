@@ -40,8 +40,9 @@ async function putQuestions(req, res) {
 
 async function deleteQuestions(req, res) {
   try {
+    const { id } = req.body;
     const deletedQuestion = await QuestionModel.findByIdAndDelete(
-      req.params.id
+      id
     );
     if (!deletedQuestion) {
       return res.status(404).json({ message: "Question not found" });
