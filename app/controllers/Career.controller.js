@@ -106,4 +106,58 @@ async function GetCareerpathById(req, res) {
     }
   }
   
-module.exports = { bulkCareerPaths, GetCareerpathById };
+
+
+  async function GetCareerPathAdmin(req, res) {
+    try {
+      const careerPaths = await CareerPath.findOne({_id:"679d3fd96aeede5b160420a6"})
+        .populate({
+          path: "levels",
+          populate: {
+            path: "lessons",
+            populate: {
+              path: "topics",
+            },
+          },
+        })
+        .lean();
+        let board = {
+          cards: [],
+          columns: [],
+          columnOrder: []
+        };
+        
+        careerPaths.levels.forEach((level) => {
+          board.columns.push({
+            id: level._id,
+            name: level.name,
+            cardIds: level.lessons
+          });
+        
+          board.columnOrder.push(level._id);
+          board.cards.push(...level.lessons);
+        });
+        
+        
+
+  
+      res.status(200).json(board);
+    } catch (error) {
+      console.error("Error fetching career paths:", error);
+      res.status(500).json({ message: "Error fetching career paths", error });
+    }
+  };
+  
+
+
+
+
+
+
+
+
+
+
+
+
+module.exports = { bulkCareerPaths, GetCareerpathById,GetCareerPathAdmin };

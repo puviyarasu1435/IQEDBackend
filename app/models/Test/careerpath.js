@@ -17,7 +17,7 @@ const lessonSchema = new mongoose.Schema({
   name: String,
   description: String,
   lessonNumber: Number,
-  topics: [{ type: mongoose.Schema.Types.ObjectId, ref: "Topic" }],
+  topics: [{ type: mongoose.Schema.Types.ObjectId, ref: "Topics" }],
 });
 
 // Models

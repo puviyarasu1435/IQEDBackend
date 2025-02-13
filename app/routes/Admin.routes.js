@@ -9,7 +9,7 @@ const {
   UpdateUser,
   deleteFeedback,
 } = require("../controllers/Admin.controller");
-const { bulkCareerPaths } = require("../controllers/Career.controller");
+const { bulkCareerPaths, GetCareerPathAdmin } = require("../controllers/Career.controller");
 const { createChallenge, deleteChallenge, getAllChallenges, getAllChallengesByID } = require("../controllers/Challenge.controller");
 const {
   FeedbackGet,
@@ -24,6 +24,7 @@ const {
   getAllProducts,
 } = require("../controllers/Product.controller");
 const { GenerateQuestions } = require("../controllers/Test/QuestionsCreater");
+const { getAllTopics } = require("../controllers/Topic.controller");
 const { UpdateProgress } = require("../middleware/CareerUpdate");
 
 const multer  = require('multer');
@@ -43,6 +44,8 @@ router.post("/users/update",upload.single('file'), UpdateUser);
 router.get("/feedback", FeedbackGet);
 router.post("/dlefeedback", deleteFeedback);
 router.get("/feedback/:id", FeedbackGetById);
+router.get("/GetCareerPathAdmin", GetCareerPathAdmin);
+router.get("/topics", getAllTopics);
 
 router.post("/products", createProduct);
 router.get("/products", getAllProducts);
@@ -59,8 +62,8 @@ router.delete("/orders/:id", deleteOrder);
 router.post("/bulkCareerPaths", bulkCareerPaths);
 router.post("/UpdateProgress", UpdateProgress);
 
-router.post("/challengeCreate", createChallenge);
-router.delete("/delete/:challengeId", deleteChallenge);
+router.post("/challengeCreate", upload.single('file1'),createChallenge);
+router.post("/challenge/delete", deleteChallenge);
 router.get("/challenge", getAllChallenges);
 router.get("/challenge/:id", getAllChallengesByID);
 
