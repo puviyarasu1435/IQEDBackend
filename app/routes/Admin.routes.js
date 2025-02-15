@@ -23,7 +23,8 @@ const {
   createProduct,
   getAllProducts,
 } = require("../controllers/Product.controller");
-const { getAllQuestions, deleteQuestions } = require("../controllers/Question.controller");
+const { getAllQuestions, deleteQuestions, postQuestions } = require("../controllers/Question.controller");
+const { GetCareerLevels, CreateNewLevel, CreateEditLevel } = require("../controllers/Syllabus.controller");
 const { GenerateQuestions } = require("../controllers/Test/QuestionsCreater");
 const { getAllTopics } = require("../controllers/Topic.controller");
 const { UpdateProgress } = require("../middleware/CareerUpdate");
@@ -45,6 +46,7 @@ router.post("/users/update",upload.single('file'), UpdateUser);
 
 router.get("/question", getAllQuestions);
 router.post("/question/delete", deleteQuestions);
+router.post("/question", postQuestions);
 
 router.get("/feedback", FeedbackGet);
 router.post("/dlefeedback", deleteFeedback);
@@ -74,6 +76,13 @@ router.get("/challenge/:id", getAllChallengesByID);
 
 
 router.post("/generatequestions", GenerateQuestions);
+
+
+router.get("/GetCareerLevels", GetCareerLevels);
+router.post("/CreateNewLevel", CreateNewLevel);
+router.post("/CreateEditLevel", CreateEditLevel);
+
+
 
 
 module.exports = router;

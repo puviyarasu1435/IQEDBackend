@@ -6,7 +6,6 @@ const UserProgress = require("../models/User/UserProgress.model");
 async function bulkCareerPaths(req, res) {
   try {
     const careerPaths = req.body;
-
     for (const careerPath of careerPaths) {
       let newCareerPath = new CareerPath({
         name: careerPath.name,
@@ -121,27 +120,9 @@ async function GetCareerpathById(req, res) {
           },
         })
         .lean();
-        let board = {
-          cards: [],
-          columns: [],
-          columnOrder: []
-        };
-        
-        careerPaths.levels.forEach((level) => {
-          board.columns.push({
-            id: level._id,
-            name: level.name,
-            cardIds: level.lessons
-          });
-        
-          board.columnOrder.push(level._id);
-          board.cards.push(...level.lessons);
-        });
-        
-        
 
   
-      res.status(200).json(board);
+      res.status(200).json(careerPaths);
     } catch (error) {
       console.error("Error fetching career paths:", error);
       res.status(500).json({ message: "Error fetching career paths", error });
