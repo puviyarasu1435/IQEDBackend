@@ -12,6 +12,7 @@ async function postQuestions(req, res) {
       message: "Questions posted successfully!",
       data: savedQuestions,
     });
+    
   } catch (error) {
     console.error("Error while posting questions:", error);
     return res.status(500).send("An error occurred. Please try again.");

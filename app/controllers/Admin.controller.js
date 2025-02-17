@@ -6,6 +6,8 @@ const S3 = require("../config/aws.config");
 
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const FeedbackModel = require("../models/User/Feedback.model");
+const { Lesson, Level } = require("../models/Test/careerpath");
+const { TopicModel } = require("../models");
 const BUCKET_NAME = process.env.S3_BUCKET_NAME;
 
 async function uploadImagesToS3(file) {
@@ -112,7 +114,7 @@ async function getAllUsers(req, res) {
         const profileUrl = user.profileImage
           ? await generateSignedUrl(user.profileImage)
           : null;
-        
+
         return {
           ...user.toObject(),
           profileImage: profileUrl,
@@ -125,7 +127,6 @@ async function getAllUsers(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
-
 
 // Delete multiple users by _id
 async function deleteUsers(req, res) {
@@ -150,7 +151,6 @@ async function deleteUsers(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
-
 
 async function UpdateUser(req, res) {
   try {
@@ -219,8 +219,6 @@ async function UpdateUser(req, res) {
   }
 }
 
-
-
 async function deleteFeedback(req, res) {
   try {
     const { feedIds } = req.body; // Expecting an array of user _id's
@@ -244,25 +242,66 @@ async function deleteFeedback(req, res) {
   }
 }
 
+async function getTopicsByLevelId(req, res) {
+  try {
+
+    const lessons = await Lesson.find({
+      _id: { $in: (await Level.findById(req.body.levelId)).lessons },
+    }).populate("topics");
 
 
+    const topics = lessons.flatMap((lesson) => lesson.topics);
+    res.json({
+      message: "successfully",
+      topics: topics,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
 
+async function deleteTopicsByLevelId(req, res) {
+try {
+  const { levelId } = req.body;
 
+  // Step 1: Find the Level
+  const level = await Level.findById(levelId);
+  if (!level) {
+    return res.status(404).json({ message: "Level not found." });
+  }
 
+  // Step 2: Find all Lessons associated with the Level
+  const lessons = await Lesson.find({ _id: { $in: level.lessons } });
 
+  // Step 3: Extract all Topic IDs from the Lessons
+  const topicIds = lessons.flatMap((lesson) => lesson.topics);
 
+  // // Step 4: Delete Topics
+  // if (topicIds.length > 0) {
+  //   await TopicModel.deleteMany({ _id: { $in: topicIds } });
+  // }
 
+  
+  // Step 5: Delete Lessons
+  if (lessons.length > 0) {
+    await Lesson.deleteMany({ _id: { $in: level.lessons } });
+  }
 
+  // Step 6: Delete the Level
+  await Level.findByIdAndDelete(levelId);
 
-
-
-
-
-
-
-
-
+  res.json({
+    message: "Level, Lessons, and Topics deleted successfully",
+    deletedTopics: topicIds,
+    deletedLessons: level.lessons,
+    deletedLevel: levelId,
+  });
+} catch (error) {
+  console.error("Error deleting Level, Lessons, and Topics:", error);
+  res.status(500).json({ message: "Internal Server Error" });
+}
+}
 
 
 
@@ -274,5 +313,7 @@ module.exports = {
   getAllUsers,
   deleteUsers,
   UpdateUser,
-  deleteFeedback
+  deleteFeedback,
+  getTopicsByLevelId,
+  deleteTopicsByLevelId
 };

@@ -8,12 +8,15 @@ const {
   deleteUsers,
   UpdateUser,
   deleteFeedback,
+  getTopicsByLevelId,
+  deleteTopicsByLevelId,
 } = require("../controllers/Admin.controller");
 const { bulkCareerPaths, GetCareerPathAdmin } = require("../controllers/Career.controller");
 const { createChallenge, deleteChallenge, getAllChallenges, getAllChallengesByID } = require("../controllers/Challenge.controller");
 const {
   FeedbackGet,
   FeedbackGetById,
+  FeedbackApproved,
 } = require("../controllers/Feedback.controller");
 const { createOrder, getAllOrders, getOrderById, updateOrderStatus, deleteOrder } = require("../controllers/Order.controller");
 const {
@@ -24,7 +27,8 @@ const {
   getAllProducts,
 } = require("../controllers/Product.controller");
 const { getAllQuestions, deleteQuestions, postQuestions } = require("../controllers/Question.controller");
-const { GetCareerLevels, CreateNewLevel, CreateEditLevel } = require("../controllers/Syllabus.controller");
+const { GetQuizSessionCount, GetIQSessionCount } = require("../controllers/QuizSession.controller");
+const { GetCareerLevels, CreateNewLevel, CreateEditLevel, GetCareerDraftLevels, deleteLevelById, PublishCareer, EditLevelOrder } = require("../controllers/Syllabus.controller");
 const { GenerateQuestions } = require("../controllers/Test/QuestionsCreater");
 const { getAllTopics, postTopicsInBulk } = require("../controllers/Topic.controller");
 const { UpdateProgress } = require("../middleware/CareerUpdate");
@@ -43,6 +47,8 @@ router.get("/users/all", getAllUsers);
 router.post("/users/delete", deleteUsers);
 router.post("/users/update",upload.single('file'), UpdateUser);
 
+router.post("/getTopicsByLevelId", getTopicsByLevelId);
+router.post("/deleteTopicsByLevelId", deleteTopicsByLevelId);
 
 router.get("/question", getAllQuestions);
 router.post("/question/delete", deleteQuestions);
@@ -51,9 +57,11 @@ router.post("/question", postQuestions);
 router.get("/feedback", FeedbackGet);
 router.post("/dlefeedback", deleteFeedback);
 router.get("/feedback/:id", FeedbackGetById);
+router.post("/FeedbackApproved", FeedbackApproved);
 router.get("/GetCareerPathAdmin", GetCareerPathAdmin);
 router.get("/topics", getAllTopics);
-router.post("/topics", postTopicsInBulk);
+router.get("/GetQuizSessionCount", GetQuizSessionCount);
+router.get("/GetIQSessionCount", GetIQSessionCount);
 
 router.post("/products", createProduct);
 router.get("/products", getAllProducts);
@@ -80,8 +88,12 @@ router.post("/generatequestions", GenerateQuestions);
 
 
 router.get("/GetCareerLevels", GetCareerLevels);
+router.get("/GetCareerDraftLevels", GetCareerDraftLevels);
 router.post("/CreateNewLevel", CreateNewLevel);
+router.post("/deleteLevelById", deleteLevelById);
 router.post("/CreateEditLevel", CreateEditLevel);
+router.post("/EditLevelOrder", EditLevelOrder);
+router.post("/PublishCareer", PublishCareer);
 
 
 

@@ -12,3 +12,4 @@ const MailTransporter = nodemailer.createTransport({
 
 
 module.exports = MailTransporter;
+

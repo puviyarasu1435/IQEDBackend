@@ -3,6 +3,7 @@ const {
   QuestionModel,
   QuizSessionModel,
   UserModel,
+  IQSessionModel,
 } = require("../models");
 const mongoose = require("mongoose");
 const UserProgress = require("../models/User/UserProgress.model");
@@ -121,6 +122,34 @@ async function getQuizSession(req, res) {
     res.status(500).json({ message: "Error updating session answers", error });
   }
 }
+
+async function GetQuizSessionCount(req, res) {
+try {
+  const totalSessions = await QuizSessionModel.countDocuments();
+  const completedSessions = await QuizSessionModel.countDocuments({ status: "completed" });
+
+  res.json({
+    totalSessions,
+    completedSessions,
+  });
+} catch (error) {
+  res.status(500).json({ message: "Server Error", error: error.message });
+}
+}
+async function GetIQSessionCount(req, res) {
+try {
+  const totalSessions = await IQSessionModel.countDocuments();
+  const completedSessions = await IQSessionModel.countDocuments({ status: "completed" });
+
+  res.json({
+    totalSessions,
+    completedSessions,
+  });
+} catch (error) {
+  res.status(500).json({ message: "Server Error", error: error.message });
+}
+}
+
 async function updateQuizSessionAnswers(req, res) {
   try {
     const { sessionId, answeredQuestions, timeTaken } = req.body;
@@ -189,4 +218,6 @@ module.exports = {
   createQuizSession,
   getQuizSession,
   updateQuizSessionAnswers,
+  GetQuizSessionCount,
+  GetIQSessionCount
 };
