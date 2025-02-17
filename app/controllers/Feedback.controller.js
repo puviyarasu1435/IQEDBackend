@@ -2,6 +2,7 @@ const FeedbackModel = require("../models/User/Feedback.model");
 const { PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 const S3 = require("../config/aws.config");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { UserModel } = require("../models");
 
 const BUCKET_NAME = process.env.S3_BUCKET_NAME;
 
@@ -72,12 +73,12 @@ async function FeedbackPost(req, res) {
           explanation,
         },
       };
-    }else{
+    } else {
       feedbackData = {
         userId: req._id,
         type,
         feedback,
-        imageList
+        imageList,
       };
     }
 
@@ -92,6 +93,29 @@ async function FeedbackPost(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
+
+async function FeedbackApproved(req, res) {
+  try {
+    const { userId, feedId } = req.body;
+    const User = await UserModel.findById({ _id: userId });
+    const Feedback = await FeedbackModel.findById({ _id: feedId });
+
+    if (!User && !Feedback) {
+      res.status(401).json({ error: error.message });
+    }
+    User.earnings.iqGems += 100;
+    Feedback.Approved = true;
+    Feedback.save();
+    User.save();
+    res.status(201).json({
+      message: "Feedback Approved successfully",
+      feedback: Feedback,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 
 // GET all Feedback
 async function FeedbackGet(req, res) {
@@ -141,4 +165,5 @@ module.exports = {
   FeedbackGetById,
   FeedbackGet,
   FeedbackPost,
+  FeedbackApproved,
 };

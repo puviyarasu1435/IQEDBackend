@@ -11,10 +11,10 @@ const EmailOTP = {};
 function Generate_OTP(Email) {
   let OTP = Math.floor(Math.random() * (1000000 - 99999)) + 99999;
   const newOtp = new OTPModel({
-    email:Email,
-    otp:OTP
-  })
-  newOtp.save()
+    email: Email,
+    otp: OTP,
+  });
+  newOtp.save();
   return OTP;
 }
 
@@ -65,14 +65,25 @@ async function UserSignUp(req, res) {
 
     await newUser.save();
 
-    const careerPaths = await CareerPath.findOne()
-  .populate({
-    path: "levels",
-    populate: {
-      path: "lessons"
-    },
-  });
-    console.log(careerPaths)
+    const careerPaths = await CareerPath.findOne({ status: "live" })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "levels",
+        populate: {
+          path: "lessons",
+        },
+      });
+
+    // const careerPaths = await CareerPath.find({ status: "live" })
+    //   .sort({ createdAt: -1 })
+    //   .limit(1)
+    //   .populate({
+    //     path: "levels",
+    //     populate: {
+    //       path: "lessons",
+    //     },
+    //   });
+    console.log(careerPaths);
     const progressRecords = [];
 
     const newUserProgress = new UserProgress({
@@ -91,16 +102,16 @@ async function UserSignUp(req, res) {
       for (const lesson of level.lessons) {
         const newLessonProgress = {
           lesson: lesson._id,
-          unlocked: lesson._id == "679d3fd96aeede5b160420a8"? true : false,
-          completed: lesson._id == "679d3fd96aeede5b160420a8"? true : false,
+          unlocked: false,
+          completed: false,
           topicProgress: [],
         };
 
         for (const topic of lesson.topics) {
           newLessonProgress.topicProgress.push({
             topic: topic._id,
-            unlocked: lesson._id == "679d3fd96aeede5b160420a8"? true : false,
-            completed: lesson._id == "679d3fd96aeede5b160420a8"? true : false,
+            unlocked: false,
+            completed: false,
             score: 0,
           });
         }

@@ -5,6 +5,11 @@ const careerPathSchema = new mongoose.Schema(
     name: String,
     description: String,
     levels: [{ type: mongoose.Schema.Types.ObjectId, ref: "Level" }],
+    status: {
+      type: String,
+      enum: ["draft", "live"],
+      default: "draft",
+    },
   },
   {
     timestamps: true,
