@@ -53,7 +53,7 @@ router.post("/deleteTopicsByLevelId", deleteTopicsByLevelId);
 router.get("/question", getAllQuestions);
 router.post("/question/delete", deleteQuestions);
 router.post("/question", postQuestions);
-
+router.post("/topics", postTopicsInBulk);
 router.get("/feedback", FeedbackGet);
 router.post("/dlefeedback", deleteFeedback);
 router.get("/feedback/:id", FeedbackGetById);
