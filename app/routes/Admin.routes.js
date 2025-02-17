@@ -26,7 +26,7 @@ const {
 const { getAllQuestions, deleteQuestions, postQuestions } = require("../controllers/Question.controller");
 const { GetCareerLevels, CreateNewLevel, CreateEditLevel } = require("../controllers/Syllabus.controller");
 const { GenerateQuestions } = require("../controllers/Test/QuestionsCreater");
-const { getAllTopics } = require("../controllers/Topic.controller");
+const { getAllTopics, postTopicsInBulk } = require("../controllers/Topic.controller");
 const { UpdateProgress } = require("../middleware/CareerUpdate");
 
 const multer  = require('multer');
@@ -53,6 +53,7 @@ router.post("/dlefeedback", deleteFeedback);
 router.get("/feedback/:id", FeedbackGetById);
 router.get("/GetCareerPathAdmin", GetCareerPathAdmin);
 router.get("/topics", getAllTopics);
+router.post("/topics", postTopicsInBulk);
 
 router.post("/products", createProduct);
 router.get("/products", getAllProducts);
