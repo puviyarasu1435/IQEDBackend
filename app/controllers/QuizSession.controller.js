@@ -10,6 +10,7 @@ const UserProgress = require("../models/User/UserProgress.model");
 const Course = require("../models/Career/Course.model");
 const { UpdateProgressfunction } = require("../middleware/CareerUpdate");
 const ChallengeModel = require("../models/Test/Challenge.model");
+const { Level } = require("../models/Test/careerpath");
 
 async function createQuizSession(req, res) {
   try {
@@ -20,10 +21,11 @@ async function createQuizSession(req, res) {
       questionCount,
       Type = "Quiz",
       ChallengeId = null,
+      TopicDistribution = [],
     } = req.body;
-
+    console.log(req.body);
     // Validate input
-    if (!topicId || !questionCount) {
+    if (!TopicDistribution && (!topicId || !questionCount)) {
       return res.status(400).json({
         message: "Missing required fields: topicId or questionCount.",
       });
@@ -36,9 +38,22 @@ async function createQuizSession(req, res) {
         .json({ message: "questionCount must be a positive integer." });
     }
     let questionsList = [];
-    
+
     if (Type == "LevelTest") {
-      const TopicDistribution = [];
+      const level = await Level.findById(levelid).populate({
+        path: "lessons",
+        populate: { path: "topics" },
+      });
+
+      if (!level) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Level not found." });
+      }
+
+      const TopicDistribution = level.lessons.flatMap((lesson) =>
+        lesson.topics.map((topic) => topic._id)
+      );
 
       if (!Array.isArray(TopicDistribution) || TopicDistribution.length === 0) {
         return res.status(400).json({ error: "No topics provided" });
@@ -77,7 +92,8 @@ async function createQuizSession(req, res) {
       },
       questionCount,
       type: Type,
-      Topics: topic.name,
+      OneMinuteEqual:Type == "LevelTest" ? 0.8333333 : topic?.OneMinuteEqual,
+      Topics: Type == "LevelTest" ? "Final Test" : topic?.name,
     });
 
     if (Type == "Challenge") {
@@ -87,6 +103,8 @@ async function createQuizSession(req, res) {
       newSession.careerPath.Level = levelid;
       newSession.careerPath.Lesson = lessonid;
       newSession.careerPath.Topic = topicId;
+    } else if (Type == "LevelTest") {
+      newSession.careerPath.Level = levelid;
     }
     const savedSession = await newSession.save();
 
@@ -110,7 +128,8 @@ async function getQuizSession(req, res) {
     }
 
     const session = await QuizSessionModel.findById(sessionId)
-      .populate("questionsList").populate("Challenge")
+      .populate("questionsList")
+      .populate("Challenge")
       .exec();
 
     if (!session) {
@@ -124,30 +143,34 @@ async function getQuizSession(req, res) {
 }
 
 async function GetQuizSessionCount(req, res) {
-try {
-  const totalSessions = await QuizSessionModel.countDocuments();
-  const completedSessions = await QuizSessionModel.countDocuments({ status: "completed" });
+  try {
+    const totalSessions = await QuizSessionModel.countDocuments();
+    const completedSessions = await QuizSessionModel.countDocuments({
+      status: "completed",
+    });
 
-  res.json({
-    totalSessions,
-    completedSessions,
-  });
-} catch (error) {
-  res.status(500).json({ message: "Server Error", error: error.message });
-}
+    res.json({
+      totalSessions,
+      completedSessions,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
 }
 async function GetIQSessionCount(req, res) {
-try {
-  const totalSessions = await IQSessionModel.countDocuments();
-  const completedSessions = await IQSessionModel.countDocuments({ status: "completed" });
+  try {
+    const totalSessions = await IQSessionModel.countDocuments();
+    const completedSessions = await IQSessionModel.countDocuments({
+      status: "completed",
+    });
 
-  res.json({
-    totalSessions,
-    completedSessions,
-  });
-} catch (error) {
-  res.status(500).json({ message: "Server Error", error: error.message });
-}
+    res.json({
+      totalSessions,
+      completedSessions,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
 }
 
 async function updateQuizSessionAnswers(req, res) {
@@ -202,6 +225,14 @@ async function updateQuizSessionAnswers(req, res) {
         Challenge.save();
         user.save();
       }
+    } else if (session.type == "LevelTest") {
+      if ((session.score / session.questionCount) * 100 > 80) {
+        let userProgress = await UserProgress.findOne({
+          user: session.host,
+        });
+        console.log("l",session.careerPath.Level);
+        await userProgress.completeFinalExam(session.careerPath.Level,session.score);
+      }
     }
     await session.save();
 
@@ -219,5 +250,5 @@ module.exports = {
   getQuizSession,
   updateQuizSessionAnswers,
   GetQuizSessionCount,
-  GetIQSessionCount
+  GetIQSessionCount,
 };

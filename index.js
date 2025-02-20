@@ -29,7 +29,7 @@ const CourseRoute = require("./app/routes/Course.routes");
 const GameRoute = require("./app/routes/Game.routes");
 const AdminRoute = require("./app/routes/Admin.routes");
 
-const { main } = require("./app/Stream/User.Stream");
+require("./app/Stream/User.Stream");
 
 
 // app.use(cors({
@@ -80,7 +80,6 @@ app.use("/admin", AdminRoute);
 SocketConnection(server)
 
 
-main().catch((err) => console.error(err));
 
 
 // Start the server

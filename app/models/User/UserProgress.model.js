@@ -105,12 +105,13 @@ userProgressSchema.methods.updateProgress = async function () {
 
 // Method to mark the final exam as completed and update progress
 userProgressSchema.methods.completeFinalExam = async function (levelId, score) {
+
   for (const level of this.levelProgress) {
-    if (level.level.toString() === levelId) {
+    console.log(level.level.toString() === levelId)
+    if (level.level.toString() == levelId) {
       if (!level.finalExamUnlocked) {
         throw new Error("Final exam is not unlocked yet.");
       }
-
       level.finalExamScore = score;
       await this.updateProgress();
       return;

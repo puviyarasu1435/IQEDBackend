@@ -10,6 +10,12 @@ const TopicSchema = new Schema({
   description: {
     type: String,
   },
+  OneMinuteEqual: {
+    type: Number,
+    required: true,
+    default: 1,
+    min: 0.01,
+  },
 });
 
 const TopicModel = mongoose.model("Topics", TopicSchema);

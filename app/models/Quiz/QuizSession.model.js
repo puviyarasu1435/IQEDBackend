@@ -15,7 +15,7 @@ const QuizSessionSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ["Quiz", "Challenge","LevelTest"],
+      enum: ["Quiz", "Challenge", "LevelTest"],
       default: "Quiz",
     },
     questionsList: [
@@ -63,6 +63,12 @@ const QuizSessionSchema = new Schema(
     timeTaken: {
       type: Number,
       default: 0,
+    },
+    OneMinuteEqual: {
+      type: Number,
+      required: true,
+      default: 1,
+      min: 0.01,
     },
   },
   {

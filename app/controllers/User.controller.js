@@ -31,11 +31,7 @@ async function getUser(req, res) {
     console.log("Request ID:", req._id);
 
     const user = await UserModel.findOne({ _id: req._id })
-      .populate([
-        { path: "valueBaseQuest.Quest", model: "Quest" }, // Populate Quest field in valueBaseQuest  // Populate UserProgresses
-        { path: "AchivedQuest", model: "Quest" }, // Populate AchivedQuest
-      ])
-      .exec();
+
 
     const userProgress = await UserProgress.findById(user.CourseProgress)
       .populate({
@@ -68,9 +64,9 @@ async function getUser(req, res) {
         grade: user.grade,
         mobilenumber: user.mobileNumber,
         earnings: user.earnings,
-        valueBaseQuest: user.valueBaseQuest,
+        XPQuests: user.XPQuests,
         CourseProgress: userProgress,
-        AchivedQuest: user.AchivedQuest,
+        StreakQuest: user.StreakQuest,
       },
     });
   } catch (error) {

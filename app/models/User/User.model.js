@@ -52,23 +52,6 @@ const UserSchema = new Schema(
       type: String,
       trim: true,
     },
-    valueBaseQuest: {
-      Quest: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Quest",
-        required: true,
-      },
-      progress: {
-        type: Number,
-        default: 0,
-        min: 0,
-        max: 100,
-      },
-      isCompleted: {
-        type: Boolean,
-        default: false,
-      },
-    },
     earnings: {
       streak: {
         count: {
@@ -97,9 +80,9 @@ const UserSchema = new Schema(
         min: 0,
       },
     },
-    CourseProgress:{
-      type:Schema.Types.ObjectId,
-      ref:"UserProgress",
+    CourseProgress: {
+      type: Schema.Types.ObjectId,
+      ref: "UserProgress",
     },
     CompletedTopic: [
       {
@@ -107,30 +90,57 @@ const UserSchema = new Schema(
         ref: "Topics",
       },
     ],
-    AchivedQuest:[
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Quest",
+    XPQuests: {
+      StepUpValue: {
+        type: Number,
+        default: 1000,
+        min: 1,
       },
-    ],
+      CurrentValue: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+      targetValue: {
+        type: Number,
+        default: 500,
+        min: 0,
+      },
+      rewardGem: {
+        type: Number,
+        default: 10,
+        min: 1,
+      },
+    },
+    StreakQuest: {
+      StepUpValue: {
+        type: Number,
+        default: 7,
+        min: 1,
+      },
+      CurrentValue: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+      targetValue: {
+        type: Number,
+        default: 1,
+        min: 0,
+      },
+      rewardGem: {
+        type: Number,
+        default: 10,
+        min: 1,
+      },
+    },
   },
   {
     timestamps: {
-      currentTime:() => new Date(new Date().getTime() + 5.5 * 60 * 60 * 1000)
+      currentTime: () => new Date(new Date().getTime() + 5.5 * 60 * 60 * 1000),
     },
   }
 );
-
-// UserSchema.pre("save", async function (next) {
-//   if (!this.isModified("auth.password")) return next();
-//   try {
-//     const salt = await bcrypt.genSalt(10);
-//     this.auth.password = await bcrypt.hash(this.auth.password, salt);
-//     next();
-//   } catch (error) {
-//     return next(error);
-//   }
-// });
 
 const UserModel = mongoose.model("User", UserSchema);
 module.exports = UserModel;

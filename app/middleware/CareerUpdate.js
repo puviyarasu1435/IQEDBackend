@@ -68,8 +68,7 @@ async function UpdateProgressfunction({ userId, careerPathId, levelId, lessonId,
     console.log("fn----",userId, careerPathId, levelId, lessonId, topicId, score)
     try {
       let userProgress = await UserProgress.findOne({
-        user: userId,
-        careerPath: careerPathId,
+        user: userId
       })
       if (!userProgress) {
         console.log({ message: "User progress not found" });

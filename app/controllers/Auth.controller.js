@@ -18,7 +18,7 @@ function Generate_OTP(Email) {
   return OTP;
 }
 
-async function UserSignUp(req, res) {
+const UserSignUp = async (req, res) => {
   try {
     const {
       email,
@@ -32,25 +32,20 @@ async function UserSignUp(req, res) {
       userName,
     } = req.body;
 
-    console.log(req.body);
-
-    if (!email || !password || !name || !age || !parentsName) {
-      return res
-        .status(400)
-        .send("Required fields: email, password, name, and age.");
+    if (!email || !password || !name || !age || !parentsName || !schoolName || !grade || !mobileNumber || !userName) {
+      return res.status(400).json({ success: false, message: "All fields are required." });
     }
 
+    // Check if the user already exists
     const existingUser = await UserModel.findOne({ "auth.email": email });
     if (existingUser) {
-      return res.status(409).send("Email is already registered.");
+      return res.status(409).json({ success: false, message: "Email is already registered." });
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new UserModel({
-      auth: {
-        email,
-        password: hashedPassword, // Save the hashed password
-      },
+      auth: { email, password: hashedPassword },
       name,
       age,
       schoolName,
@@ -58,84 +53,59 @@ async function UserSignUp(req, res) {
       mobileNumber,
       parentsName,
       userName,
-      valueBaseQuest: {
-        Quest: "6748fdb095e222aff65dc6b2",
-      },
     });
 
     await newUser.save();
 
+    // Fetch the latest live career path
     const careerPaths = await CareerPath.findOne({ status: "live" })
       .sort({ createdAt: -1 })
       .populate({
         path: "levels",
-        populate: {
-          path: "lessons",
-        },
+        populate: { path: "lessons", populate: { path: "topics" } },
       });
 
-    // const careerPaths = await CareerPath.find({ status: "live" })
-    //   .sort({ createdAt: -1 })
-    //   .limit(1)
-    //   .populate({
-    //     path: "levels",
-    //     populate: {
-    //       path: "lessons",
-    //     },
-    //   });
-    console.log(careerPaths);
-    const progressRecords = [];
+    if (!careerPaths) {
+      return res.status(404).json({ success: false, message: "No career path available." });
+    }
 
+    const unlockedAll = parentsName === "admin";
     const newUserProgress = new UserProgress({
       user: newUser._id,
       careerPath: careerPaths._id,
-      levelProgress: [],
-    });
-
-    for (const level of careerPaths.levels) {
-      const newLevelProgress = {
+      levelProgress: careerPaths.levels.map((level) => ({
         level: level._id,
-        completed: false,
-        lessonProgress: [],
-      };
-
-      for (const lesson of level.lessons) {
-        const newLessonProgress = {
+        completed: unlockedAll,
+        unlocked: unlockedAll,
+        lessonProgress: level.lessons.map((lesson) => ({
           lesson: lesson._id,
-          unlocked: false,
-          completed: false,
-          topicProgress: [],
-        };
-
-        for (const topic of lesson.topics) {
-          newLessonProgress.topicProgress.push({
+          unlocked: unlockedAll,
+          completed: unlockedAll,
+          topicProgress: (lesson.topics || []).map((topic) => ({
             topic: topic._id,
-            unlocked: false,
-            completed: false,
+            unlocked: unlockedAll,
+            completed: unlockedAll,
             score: 0,
-          });
-        }
-
-        newLevelProgress.lessonProgress.push(newLessonProgress);
-      }
-
-      newUserProgress.levelProgress.push(newLevelProgress);
-    }
+          })),
+        })),
+      })),
+    });
 
     await newUserProgress.save();
-    progressRecords.push(newUserProgress._id);
-    newUser.CourseProgress = progressRecords[0];
+
+    // Link progress to the user
+    newUser.CourseProgress = newUserProgress._id;
     await newUser.save();
 
-    return res.status(201).json({
-      success: true,
-      message: "User registered successfully!",
-    });
+    return res.status(201).json({ success: true, message: "User registered successfully!" });
   } catch (error) {
     console.error("Error during user signup:", error);
-    return res.status(500).send("An error occurred during signup.");
+    return res.status(500).json({ success: false, message: "An error occurred during signup." });
   }
-}
+};
+
+module.exports = UserSignUp;
+
 
 async function UserSignIn(req, res) {
   try {
