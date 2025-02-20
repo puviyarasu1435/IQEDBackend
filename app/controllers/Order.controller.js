@@ -58,7 +58,7 @@ const getAllOrders = async (req, res) => {
       return {
         orderId: _id,
         customerName: userId.name,
-        shippingAddress: `${shippingAddress.address} ${shippingAddress.area} ${shippingAddress.city} ${shippingAddress.state} ${shippingAddress.pincode}, ${shippingAddress.country}`,
+        shippingAddress: `${shippingAddress.address}, ${shippingAddress.area}, ${shippingAddress.city}, ${shippingAddress.state}, ${shippingAddress.pincode}, ${shippingAddress.country}`,
         orderStatus: orderStatus,
         mobileNumber: shippingAddress.mobileNumber,
         challengeTitle: Challenge.title,
