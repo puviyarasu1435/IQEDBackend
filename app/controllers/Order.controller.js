@@ -1,16 +1,30 @@
 const Order = require("../models/Ecart/Order.model"); // Assuming you have the Order model imported
+const { PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const S3 = require("../config/aws.config");
 
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+
+const BUCKET_NAME = process.env.S3_BUCKET_NAME;
+async function generateSignedUrl(imageKey) {
+  return await getSignedUrl(
+    S3,
+    new GetObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: imageKey,
+    }),
+    { expiresIn: 60 * 60 * 24 } // URL expires in 1 hour
+  );
+}
 // Create a new order
 const createOrder = async (req, res) => {
   try {
-    const {Challenge, shippingAddress } =
-      req.body;
-    const userId =req._id
+    const { Challenge, shippingAddress } = req.body;
+    const userId = req._id;
     // Create a new order instance
     const newOrder = new Order({
       userId,
       Challenge,
-      shippingAddress
+      shippingAddress,
     });
 
     // Save the new order to the database
@@ -33,22 +47,30 @@ const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find().populate("userId Challenge"); // Populate product details
     const orderDetails = orders.map((order) => {
-      const { _id, userId, shippingAddress, Challenge, orderStatus, createdAt } =order;
+      const {
+        _id,
+        userId,
+        shippingAddress,
+        Challenge,
+        orderStatus,
+        createdAt,
+      } = order;
       return {
         orderId: _id,
         customerName: userId.name,
         shippingAddress: `${shippingAddress.address} ${shippingAddress.area} ${shippingAddress.city} ${shippingAddress.state} ${shippingAddress.pincode}, ${shippingAddress.country}`,
         orderStatus: orderStatus,
-        mobileNumber:shippingAddress.mobileNumber,
+        mobileNumber: shippingAddress.mobileNumber,
         challengeTitle: Challenge.title,
         OrderPlaced: createdAt,
-        productDetails:{
+
+        productDetails: {
           productId: Challenge._id,
           name: Challenge.productName,
           price: Challenge.eligibleGem,
           quantity: 1,
-          sponsoreName:Challenge.sponsoreName,
-          description:Challenge.description
+          sponsoreName: Challenge.sponsoreName,
+          description: Challenge.description,
         },
       };
     });
@@ -66,10 +88,47 @@ const getAllOrders = async (req, res) => {
 
 const getAllUserOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ userId: req._id }).populate("Challenge"); // Populate product details
+    const orders = await Order.find({ userId: req._id }).populate("Challenge");
+
+    const orderDetails = await Promise.all(
+      orders.map(async (order) => {
+        const {
+          _id,
+          userId,
+          shippingAddress,
+          Challenge,
+          orderStatus,
+          createdAt,
+        } = order;
+
+        const profileUrl = Challenge.banner
+          ? await generateSignedUrl(Challenge.banner)
+          : null;
+
+        return {
+          orderId: _id,
+          customerName: userId.name,
+          shippingAddress: `${shippingAddress.address} ${shippingAddress.area} ${shippingAddress.city} ${shippingAddress.state} ${shippingAddress.pincode}, ${shippingAddress.country}`,
+          orderStatus: orderStatus,
+          mobileNumber: shippingAddress.mobileNumber,
+          challengeTitle: Challenge.title,
+          OrderPlaced: createdAt,
+          Image: profileUrl,
+          productDetails: {
+            productId: Challenge._id,
+            name: Challenge.productName,
+            price: Challenge.eligibleGem,
+            quantity: 1,
+            sponsoreName: Challenge.sponsoreName,
+            description: Challenge.description,
+          },
+        };
+      })
+    );
+
     return res.status(200).json({
       message: "Orders retrieved successfully",
-      orders,
+      orders: orderDetails,
     });
   } catch (error) {
     console.error(error);
@@ -106,7 +165,7 @@ const updateOrderStatus = async (req, res) => {
   try {
     const orderId = req.params.id;
     const { orderStatus } = req.body; // Only update the status field
-    console.log(orderId,orderStatus)
+    console.log(orderId, orderStatus);
     // if (
     //   ![
     //     "Pending Order",
