@@ -37,16 +37,19 @@ const getAllOrders = async (req, res) => {
       return {
         orderId: _id,
         customerName: userId.name,
-        shippingAddress: `${shippingAddress.addressLine}, ${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.postalCode}, ${shippingAddress.country}`,
+        shippingAddress: `${shippingAddress.address} ${shippingAddress.area} ${shippingAddress.city} ${shippingAddress.state} ${shippingAddress.pincode}, ${shippingAddress.country}`,
         orderStatus: orderStatus,
-        productNames: Challenge.map((event) => event.productName),
+        mobileNumber:shippingAddress.mobileNumber,
+        challengeTitle: Challenge.title,
         OrderPlaced: createdAt,
-        productDetails: Challenge.map((event) => ({
-          productId: event._id,
-          name: event.productName,
-          price: event.eligibleGem,
+        productDetails:{
+          productId: Challenge._id,
+          name: Challenge.productName,
+          price: Challenge.eligibleGem,
           quantity: 1,
-        })),
+          sponsoreName:Challenge.sponsoreName,
+          description:Challenge.description
+        },
       };
     });
     return res.status(200).json({
