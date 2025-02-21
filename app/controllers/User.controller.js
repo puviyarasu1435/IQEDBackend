@@ -230,6 +230,45 @@ async function UpdateUser(req, res) {
 }
 
 
+
+async function UnlockedTopics(req, res) {
+try {
+  const userId = req.user?.id || req.params.id || req._id;
+  
+  const userProgress = await UserProgress.findOne({ user: userId }).populate({
+    path: "levelProgress.lessonProgress.topicProgress.topic",
+    select: "name", // Only fetching necessary fields
+  });
+
+  if (!userProgress) {
+    return res.status(404).json({ message: "User progress not found" });
+  }
+
+  const uniqueTopics = new Map();
+
+  userProgress.levelProgress.forEach(level => {
+    level.lessonProgress.forEach(lesson => {
+      lesson.topicProgress.forEach(topic => {
+        if (topic.unlocked && !uniqueTopics.has(topic.topic._id.toString())) {
+          uniqueTopics.set(topic.topic._id.toString(), {
+            id: topic.topic._id,
+            name: topic.topic.name,
+          });
+        }
+      });
+    });
+  });
+
+  return res.json({ unlockedTopics: Array.from(uniqueTopics.values()) });
+
+} catch (error) {
+  console.error("Error fetching unlocked topics:", error);
+  return res.status(500).json({ message: "Internal server error" });
+}
+}
+
+
+
 module.exports = {
   getUser,
   getEarnings,
@@ -237,4 +276,5 @@ module.exports = {
   putGem,
   getleaderboard,
   UpdateUser,
+  UnlockedTopics
 };

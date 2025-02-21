@@ -4,7 +4,7 @@ const { FeedbackPost, FeedbackGet, FeedbackGetById } = require("../controllers/F
 const { getOrderById, createOrder, getAllUserOrders } = require("../controllers/Order.controller");
 const { getAllProducts, getProductById } = require("../controllers/Product.controller");
 const { getAllTopics } = require("../controllers/Topic.controller");
-const { getUser, getEarnings, putXP, putGem, getleaderboard, UpdateUser } = require("../controllers/User.controller");
+const { getUser, getEarnings, putXP, putGem, getleaderboard, UpdateUser, UnlockedTopics } = require("../controllers/User.controller");
 const router = require("express").Router();
 const multer  = require('multer');
 const storage = multer.memoryStorage()
@@ -35,5 +35,6 @@ router.get("/challenge", getAllChallenges);
 router.get("/challenge/:id", getAllChallengesByID);
 router.get("/CheckUserOrder/:id", CheckUserOrder);
 router.get("/topicsall", getAllTopics);
+router.get("/unlockedtopics", UnlockedTopics);
 
 module.exports = router;
