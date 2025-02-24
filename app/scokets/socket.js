@@ -65,7 +65,7 @@ const SocketConnection = (server) => {
         const topic = await TopicModel.findById(rooms[roomId].TopicID);
         const questionsList = await QuestionModel.aggregate([
           { $match: { topics:topic._id } }, // Match topic ID
-          { $sample: { size: 3 } }, // Randomly sample questions
+          { $sample: { size: 20 } }, // Randomly sample questions
         ]);
         
         if (questionsList.length > 0) {
